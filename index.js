@@ -18,6 +18,7 @@ class DynamodDBSubscriber extends EventEmitter {
     this._region = params.region;
     this._table = params.table;
     this._streamArn = params.arn;
+    this._endpoint = params.endpoint;
 
     if (typeof params.interval === 'number') {
       this._interval = params.interval;
@@ -27,7 +28,12 @@ class DynamodDBSubscriber extends EventEmitter {
       this._interval = ms('10s');
     }
 
-    this._ddbStream = new aws.DynamoDBStreams({ region: params.region });
+    this._ddbStream = params.endpoint 
+      ? new aws.DynamoDBStreams({
+        region: params.region,
+        endpoint: params.endpoint
+      }) 
+      : new aws.DynamoDBStreams({ region: params.region });
   }
 
   _getOpenShards (callback) {
@@ -134,7 +140,9 @@ class DynamodDBSubscriber extends EventEmitter {
       //try get stream arn with dynamodb.describeTable
       cb => {
         if (this._streamArn) { return cb(); }
-        const dynamo = new aws.DynamoDB({ region: this._region });
+        const dynamo = this._endpoint 
+          ? new aws.DynamoDB({ region: this._region, endpoint: this._endpoint }) 
+          : new aws.DynamoDB({ region: this._region });
         dynamo.describeTable({ TableName: this._table }, (err, tableDescription) => {
           if (err) {
             return cb();
