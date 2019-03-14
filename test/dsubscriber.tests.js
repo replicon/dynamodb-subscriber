@@ -76,6 +76,7 @@ describe('DynamodbSubscriber', function () {
     const arn = 'urn:test:test';
     const ShardId = '456';
     const ShardIterator = 'iterator-123';
+    const ExpiredShardIterator = 'expired-iterator-012';
     const TableName = 'credentials';
 
     before(function() {
@@ -111,6 +112,9 @@ describe('DynamodbSubscriber', function () {
         if (params.ShardId !== ShardId) {
           return callback(new Error(`unknown ShardId ${params.ShardId}`));
         }
+        if (params.ShardIteratorType === 'LATEST') {
+          return callback(null, { ShardIterator: ExpiredShardIterator });
+        }
         callback(null, { ShardIterator });
       });
 
@@ -129,6 +133,9 @@ describe('DynamodbSubscriber', function () {
 
       AWS.mock('DynamoDBStreams', 'getRecords', (params, callback) => {
         if (params.ShardIterator !== ShardIterator) {
+          if (params.ShardIterator === ExpiredShardIterator) {
+            return callback({code: 'TrimmedDataAccessException'});
+          }
           return callback(new Error(`unknown ShardId ${params.ShardId}`));
         }
         callback(null, { Records: [ record ], NextShardIterator: 'iterator-456' });

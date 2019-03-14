@@ -28,11 +28,11 @@ class DynamodDBSubscriber extends EventEmitter {
       this._interval = ms('10s');
     }
 
-    this._ddbStream = params.endpoint 
+    this._ddbStream = params.endpoint
       ? new aws.DynamoDBStreams({
         region: params.region,
         endpoint: params.endpoint
-      }) 
+      })
       : new aws.DynamoDBStreams({ region: params.region });
   }
 
@@ -94,6 +94,21 @@ class DynamodDBSubscriber extends EventEmitter {
       debug('stream.getRecords (start) Shard: %s', shard.ShardId);
       this._ddbStream.getRecords({ ShardIterator: shard.iterator }, (err, data) => {
         if (err) {
+          if (err.code === 'TrimmedDataAccessException') {
+            this._ddbStream.getShardIterator({
+              StreamArn: this._streamArn,
+              ShardId: shard.ShardId,
+              ShardIteratorType: 'TRIM_HORIZON'
+            }, (errr, dataa) => {
+              if (errr) {
+                return callback(errr);
+              }
+              debug('stream.getShardIterator (end) Has ShardIterator? %s', Boolean(dataa.ShardIterator));
+              shard.iterator = dataa.ShardIterator;
+              callback(null, true);
+            });
+            return;
+          }
           return callback(err);
         }
 
@@ -111,10 +126,13 @@ class DynamodDBSubscriber extends EventEmitter {
         shard.iterator = data.NextShardIterator;
         callback();
       });
-    }, (err) => {
+    }, (err, rerunJob) => {
       if (err) {
         this.emit('error', err);
         return job.done();
+      }
+      if (rerunJob) {
+        return this._process(job);
       }
       //if some shard does not longer has an iterator
       //we need to fetch the openshards again and
