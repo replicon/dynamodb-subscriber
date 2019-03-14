@@ -1,5 +1,5 @@
 {
-  "name": "dynamodb-subscriber",
+  "name": "@replicon/dynamodb-subscriber",
   "description": "",
   "version": "1.2.0",
   "author": "Andrew Ovens <andrew.ovens@replicon.com>",
