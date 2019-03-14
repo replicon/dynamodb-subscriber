@@ -1,0 +1,7 @@
+.git/
+.github/
+.gitmodules
+.idea/
+.travis.yml
+.vscode/
+test/
