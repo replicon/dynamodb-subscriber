@@ -41,5 +41,6 @@ jobs:
                   --cx-flow.filterSeverity
                   --cx-flow.thresholds.high=1
                   --cx-flow.thresholds.medium=1
+                  --cx-flow.scan-resubmit=true
                   ${{ github.event.number && format('--merge-id={0}', github.event.number)}}
                   
