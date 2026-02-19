@@ -1,14 +1,17 @@
-const AWS = require('aws-sdk-mock');
+const sinon = require('sinon');
+const { DynamoDBStreams } = require('@aws-sdk/client-dynamodb-streams');
 const assert = require('chai').assert;
 const DynamoDBSubscriber = require('../index.js');
 
 describe('(internal behavior) subscriber._getOpenShards', function () {
+  let describeStreamStub, getShardIteratorStub;
+
   afterEach(function () {
-    AWS.restore();
+    sinon.restore();
   });
 
   before(function() {
-    AWS.mock('DynamoDBStreams', 'describeStream', (params, callback) => {
+    describeStreamStub = sinon.stub(DynamoDBStreams.prototype, 'describeStream').callsFake(function(params, callback) {
       assert.equal(params.StreamArn, 'urn:test:test');
       assert.equal(params.ExclusiveStartShardId, undefined);
       callback(null, {
@@ -21,9 +24,13 @@ describe('(internal behavior) subscriber._getOpenShards', function () {
       });
     });
 
-    AWS.mock('DynamoDBStreams', 'getShardIterator', (params, callback) => {
+    getShardIteratorStub = sinon.stub(DynamoDBStreams.prototype, 'getShardIterator').callsFake(function(params, callback) {
       callback(null, { ShardIterator: '123' });
     });
+  });
+
+  after(function() {
+    sinon.restore();
   });
 
   it('should work', function (done) {

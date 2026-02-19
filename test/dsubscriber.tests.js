@@ -1,10 +1,14 @@
-const AWS = require('aws-sdk-mock');
+const sinon = require('sinon');
+const { DynamoDBStreams } = require('@aws-sdk/client-dynamodb-streams');
+const { DynamoDB } = require('@aws-sdk/client-dynamodb');
 const assert = require('chai').assert;
 const DynamoDBSubscriber = require('../index');
 
 describe('DynamodbSubscriber', function () {
+  let describeStreamStub, getShardIteratorStub, getRecordsStub, describeTableStub;
+
   afterEach(function () {
-    AWS.restore();
+    sinon.restore();
   });
 
   describe('subscribing to stream with 1 record', function() {
@@ -13,7 +17,7 @@ describe('DynamodbSubscriber', function () {
     const ShardIterator = 'iterator-123';
 
     before(function() {
-      AWS.mock('DynamoDBStreams', 'describeStream', (params, callback) => {
+      describeStreamStub = sinon.stub(DynamoDBStreams.prototype, 'describeStream').callsFake(function(params, callback) {
         if (params.StreamArn !== arn) {
           return callback(new Error(`unknown stream ${params.StreamArn}`));
         }
@@ -30,7 +34,7 @@ describe('DynamodbSubscriber', function () {
         });
       });
 
-      AWS.mock('DynamoDBStreams', 'getShardIterator', (params, callback) => {
+      getShardIteratorStub = sinon.stub(DynamoDBStreams.prototype, 'getShardIterator').callsFake(function(params, callback) {
         if (params.ShardId !== ShardId) {
           return callback(new Error(`unknown ShardId ${params.ShardId}`));
         }
@@ -50,12 +54,16 @@ describe('DynamodbSubscriber', function () {
         }
       };
 
-      AWS.mock('DynamoDBStreams', 'getRecords', (params, callback) => {
+      getRecordsStub = sinon.stub(DynamoDBStreams.prototype, 'getRecords').callsFake(function(params, callback) {
         if (params.ShardIterator !== ShardIterator) {
           return callback(new Error(`unknown ShardId ${params.ShardId}`));
         }
         callback(null, { Records: [ record ], NextShardIterator: 'iterator-456' });
       });
+    });
+
+    after(function() {
+      sinon.restore();
     });
 
     it('should return the record', function (done) {
@@ -80,7 +88,7 @@ describe('DynamodbSubscriber', function () {
     const TableName = 'credentials';
 
     before(function() {
-      AWS.mock('DynamoDB', 'describeTable', (params, callback) => {
+      describeTableStub = sinon.stub(DynamoDB.prototype, 'describeTable').callsFake(function(params, callback) {
         if (params.TableName !== TableName) {
           return callback(new Error(`unnknown table ${params.table}`));
         }
@@ -91,7 +99,7 @@ describe('DynamodbSubscriber', function () {
         });
       });
 
-      AWS.mock('DynamoDBStreams', 'describeStream', (params, callback) => {
+      describeStreamStub = sinon.stub(DynamoDBStreams.prototype, 'describeStream').callsFake(function(params, callback) {
         if (params.StreamArn !== arn) {
           return callback(new Error(`unknown stream ${params.StreamArn}`));
         }
@@ -108,7 +116,7 @@ describe('DynamodbSubscriber', function () {
         });
       });
 
-      AWS.mock('DynamoDBStreams', 'getShardIterator', (params, callback) => {
+      getShardIteratorStub = sinon.stub(DynamoDBStreams.prototype, 'getShardIterator').callsFake(function(params, callback) {
         if (params.ShardId !== ShardId) {
           return callback(new Error(`unknown ShardId ${params.ShardId}`));
         }
@@ -131,7 +139,7 @@ describe('DynamodbSubscriber', function () {
         }
       };
 
-      AWS.mock('DynamoDBStreams', 'getRecords', (params, callback) => {
+      getRecordsStub = sinon.stub(DynamoDBStreams.prototype, 'getRecords').callsFake(function(params, callback) {
         if (params.ShardIterator !== ShardIterator) {
           if (params.ShardIterator === ExpiredShardIterator) {
             return callback({code: 'TrimmedDataAccessException'});
@@ -140,6 +148,10 @@ describe('DynamodbSubscriber', function () {
         }
         callback(null, { Records: [ record ], NextShardIterator: 'iterator-456' });
       });
+    });
+
+    after(function() {
+      sinon.restore();
     });
 
     it('should return the record', function (done) {

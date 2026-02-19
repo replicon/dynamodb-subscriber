@@ -1,6 +1,9 @@
 "use strict";
 
-const aws = require('aws-sdk');
+const { DynamoDB } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBStreams } = require('@aws-sdk/client-dynamodb-streams');
+const { unmarshall } = require('@aws-sdk/util-dynamodb');
+
 const EventEmitter = require('events').EventEmitter;
 const schedule = require('tempus-fugit').schedule;
 const ms = require('ms');
@@ -29,11 +32,13 @@ class DynamodDBSubscriber extends EventEmitter {
     }
 
     this._ddbStream = params.endpoint
-      ? new aws.DynamoDBStreams({
-        region: params.region,
-        endpoint: params.endpoint
-      })
-      : new aws.DynamoDBStreams({ region: params.region });
+      ? new DynamoDBStreams({
+      region: params.region,
+      endpoint: params.endpoint
+    })
+      : new DynamoDBStreams({
+      region: params.region
+    });
   }
 
   _getOpenShards (callback) {
@@ -119,7 +124,7 @@ class DynamodDBSubscriber extends EventEmitter {
 
         if (data.Records && data.Records.length > 0) {
           data.Records.forEach(r => {
-            const key = r.dynamodb && r.dynamodb.Keys && aws.DynamoDB.Converter.output({M: r.dynamodb.Keys});
+            const key = r.dynamodb && r.dynamodb.Keys && unmarshall(r.dynamodb.Keys);
             this.emit('record', r, key);
           });
         }
@@ -159,8 +164,13 @@ class DynamodDBSubscriber extends EventEmitter {
       cb => {
         if (this._streamArn) { return cb(); }
         const dynamo = this._endpoint 
-          ? new aws.DynamoDB({ region: this._region, endpoint: this._endpoint }) 
-          : new aws.DynamoDB({ region: this._region });
+          ? new DynamoDB({
+          region: this._region,
+          endpoint: this._endpoint
+        }) 
+          : new DynamoDB({
+          region: this._region
+        });
         dynamo.describeTable({ TableName: this._table }, (err, tableDescription) => {
           if (err) {
             return cb();
