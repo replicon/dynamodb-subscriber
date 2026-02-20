@@ -5,3 +5,8 @@
 .travis.yml
 .vscode/
 test/
+MANUAL_TEST.md
+compare-versions.js
+manual-test.js
+run-comparison-test.sh
+verify-output-shape.js
