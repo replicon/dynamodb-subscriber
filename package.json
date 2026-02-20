@@ -1,10 +1,13 @@
 {
   "name": "@replicon/dynamodb-subscriber",
   "description": "",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "author": "Andrew Ovens <andrew.ovens@replicon.com>",
   "repository": {
     "url": "git://github.com/replicon/dynamodb-subscriber.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "main": "index.js",
   "scripts": {
