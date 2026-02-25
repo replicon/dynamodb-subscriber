@@ -99,7 +99,7 @@ class DynamodDBSubscriber extends EventEmitter {
       debug('stream.getRecords (start) Shard: %s', shard.ShardId);
       this._ddbStream.getRecords({ ShardIterator: shard.iterator }, (err, data) => {
         if (err) {
-          if (err.code === 'TrimmedDataAccessException') {
+          if (err.name === 'TrimmedDataAccessException') {
             this._ddbStream.getShardIterator({
               StreamArn: this._streamArn,
               ShardId: shard.ShardId,
