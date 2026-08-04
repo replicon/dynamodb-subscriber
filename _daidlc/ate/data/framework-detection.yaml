@@ -1,0 +1,87 @@
+# Test Framework Auto-Detection Rules
+# Used by the AI Test Engine to identify project test setup
+
+detection_rules:
+  jest:
+    indicators:
+      - file: "package.json"
+        contains: '"jest"'
+      - file: "jest.config.js"
+        exists: true
+      - file: "jest.config.ts"
+        exists: true
+      - glob: "**/*.test.{js,ts,jsx,tsx}"
+        min_count: 1
+    run_command: "npx jest --verbose --coverage"
+    coverage_command: "npx jest --coverage --coverageReporters=json-summary"
+
+  vitest:
+    indicators:
+      - file: "package.json"
+        contains: '"vitest"'
+      - file: "vitest.config.js"
+        exists: true
+      - file: "vitest.config.ts"
+        exists: true
+    run_command: "npx vitest run --reporter=verbose"
+    coverage_command: "npx vitest run --coverage"
+
+  pytest:
+    indicators:
+      - file: "pyproject.toml"
+        contains: "pytest"
+      - file: "pytest.ini"
+        exists: true
+      - file: "setup.cfg"
+        contains: "[tool:pytest]"
+      - glob: "**/test_*.py"
+        min_count: 1
+    run_command: "python -m pytest -v --tb=long"
+    coverage_command: "python -m pytest --cov --cov-report=json"
+
+  mocha:
+    indicators:
+      - file: "package.json"
+        contains: '"mocha"'
+      - file: ".mocharc.yml"
+        exists: true
+    run_command: "npx mocha --recursive --reporter spec"
+    coverage_command: "npx nyc mocha --recursive"
+
+  playwright:
+    indicators:
+      - file: "package.json"
+        contains: '"@playwright/test"'
+      - file: "playwright.config.ts"
+        exists: true
+    run_command: "npx playwright test"
+    coverage_command: "npx playwright test"
+
+  cypress:
+    indicators:
+      - file: "package.json"
+        contains: '"cypress"'
+      - file: "cypress.config.js"
+        exists: true
+      - file: "cypress.config.ts"
+        exists: true
+    run_command: "npx cypress run"
+    coverage_command: "npx cypress run"
+
+  go_test:
+    indicators:
+      - file: "go.mod"
+        exists: true
+      - glob: "**/*_test.go"
+        min_count: 1
+    run_command: "go test -v ./..."
+    coverage_command: "go test -v -cover -coverprofile=coverage.out ./..."
+
+priority_order:
+  - vitest
+  - jest
+  - pytest
+  - playwright
+  - cypress
+  - mocha
+  - go_test

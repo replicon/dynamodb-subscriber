@@ -1,0 +1,14 @@
+module,agent_id,name,title,capabilities,file_path
+ate,d-aidlc/ate/agents/test-architect,Trent,Test Architect,test strategy; test generation; test execution; result analysis; coverage reporting; regression detection,_daidlc/ate\agents\test-architect.agent.yaml
+core,d-aidlc/core/agents/daidlc-master,D-AIDLC Master,Workflow Orchestrator,workflow orchestration; help system; agent routing; status tracking,_daidlc/core\agents\daidlc-master.agent.yaml
+daidlc,d-aidlc/daidlc/agents/analyst,Aria,Research Analyst,business analysis; market research; domain research; brainstorming; reverse engineering,_daidlc/daidlc\agents\analyst.agent.yaml
+daidlc,d-aidlc/daidlc/agents/architect,Atlas,Solutions Architect,architecture design; ADRs; system design; NFR analysis; infrastructure mapping,_daidlc/daidlc\agents\architect.agent.yaml
+daidlc,d-aidlc/daidlc/agents/developer,Dash,Senior Developer,story execution; test-driven development; code implementation; code review,_daidlc/daidlc\agents\developer.agent.yaml
+daidlc,d-aidlc/daidlc/agents/pm,Parker,Product Manager,PRD creation; requirements discovery; stakeholder alignment; user stories; epics; GitHub issue publishing,_daidlc/daidlc\agents\pm.agent.yaml
+daidlc,d-aidlc/daidlc/agents/qa-engineer,Vera,QA Engineer,test automation; API testing; E2E testing; coverage analysis; regression testing,_daidlc/daidlc\agents\qa-engineer.agent.yaml
+daidlc,d-aidlc/daidlc/agents/quick-dev,Flash,Quick Flow Developer,rapid development; quick specs; bug fixes; small features; refactoring,_daidlc/daidlc\agents\quick-dev.agent.yaml
+daidlc,d-aidlc/daidlc/agents/scrum-master,Scout,Scrum Master,sprint planning; story preparation; agile ceremonies; retrospectives; course correction; story assignment; GitHub issue sync,_daidlc/daidlc\agents\scrum-master.agent.yaml
+daidlc,d-aidlc/daidlc/agents/tech-writer,Sage,Technical Writer,documentation; API docs; user guides; knowledge management; diagram generation,_daidlc/daidlc\agents\tech-writer.agent.yaml
+daidlc,d-aidlc/daidlc/agents/ux-designer,Uma,UX Designer,UX design; user flows; wireframes; interaction design; accessibility,_daidlc/daidlc\agents\ux-designer.agent.yaml
+gov,d-aidlc/gov/agents/governance-officer,Grace,Governance Officer,audit trail; stage validation; content validation; questions management; gate control,_daidlc/gov\agents\governance-officer.agent.yaml
+std,d-aidlc/std/agents/compliance-officer,Clio,Compliance Officer,security review; compliance checks; regulatory validation; tech stack governance,_daidlc/std\agents\compliance-officer.agent.yaml

@@ -1,0 +1,38 @@
+name: generate-tests
+description: "AI-powered test generation for unit, integration, and E2E tests"
+author: "D-AIDLC"
+
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/ate/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+test_artifacts: "{config_source}:test_artifacts"
+test_framework: "{config_source}:test_framework"
+e2e_framework: "{config_source}:e2e_framework"
+date: system-generated
+
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/ate/workflows/generate-tests"
+instructions: "{installed_path}/instructions.xml"
+validation: "{installed_path}/checklist.md"
+
+input_file_patterns:
+  test_strategy:
+    description: "Test strategy for targets and approach"
+    whole: "{test_artifacts}/*test-strategy*.md"
+    load_strategy: "FULL_LOAD"
+  project_context:
+    description: "Project conventions"
+    whole: "**/project-context.md"
+    load_strategy: "FULL_LOAD"
+
+default_output_file: "{test_artifacts}/reports/test-generation-report.md"
+
+tags:
+  - testing
+  - generation
+  - automation
+
+execution_hints:
+  interactive: false
+  autonomous: true
+  iterative: true

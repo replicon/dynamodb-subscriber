@@ -1,0 +1,39 @@
+code: std
+name: "D-AIDLC Compliance & Standards Module"
+description: "Security review, regulatory compliance, and technology governance"
+version: "1.0.0"
+default_selected: false
+
+header: "Compliance & Standards Configuration"
+subheader: "Configure compliance and security standards for your project"
+
+compliance_standards:
+  prompt: "Which compliance standards apply to this project?"
+  default: "owasp"
+  result: "{value}"
+  multi-select:
+    - value: "owasp"
+      label: "OWASP Top 10 (Web Application Security)"
+    - value: "gdpr"
+      label: "GDPR (EU Data Privacy)"
+    - value: "soc2"
+      label: "SOC 2 (Service Organization Controls)"
+    - value: "hipaa"
+      label: "HIPAA (Health Information Privacy)"
+
+approved_tech_stack:
+  prompt: "Path to approved technology list (or 'none' to skip tech stack validation)?"
+  default: "none"
+  result: "{value}"
+
+security_scan_level:
+  prompt: "Security scanning depth?"
+  default: "standard"
+  result: "{value}"
+  single-select:
+    - value: "basic"
+      label: "Basic - OWASP Top 10 only"
+    - value: "standard"
+      label: "Standard - OWASP + dependency vulnerabilities (Recommended)"
+    - value: "deep"
+      label: "Deep - Full security audit with threat modeling"

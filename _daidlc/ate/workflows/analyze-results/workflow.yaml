@@ -1,0 +1,33 @@
+name: analyze-results
+description: "AI-powered analysis of test results: categorize failures, suggest fixes, identify patterns"
+author: "D-AIDLC"
+
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/ate/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+test_artifacts: "{config_source}:test_artifacts"
+date: system-generated
+
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/ate/workflows/analyze-results"
+instructions: "{installed_path}/instructions.xml"
+validation: "{installed_path}/checklist.md"
+template: "{installed_path}/templates/test-report-template.md"
+
+input_file_patterns:
+  execution_report:
+    description: "Most recent test execution report"
+    whole: "{test_artifacts}/reports/*test-execution*.md"
+    load_strategy: "FULL_LOAD"
+
+default_output_file: "{test_artifacts}/reports/test-analysis-{{date}}.md"
+
+tags:
+  - testing
+  - analysis
+  - ai
+
+execution_hints:
+  interactive: false
+  autonomous: true
+  iterative: false

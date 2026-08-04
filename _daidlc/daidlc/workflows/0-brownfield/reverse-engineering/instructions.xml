@@ -1,0 +1,387 @@
+<workflow>
+  <critical>Communicate all responses in {communication_language}</critical>
+  <critical>Generate all documents in {document_output_language}</critical>
+  <critical>Produce ALL 9 artifacts — no partial completion allowed</critical>
+  <critical>Every finding must cite specific file paths and line numbers</critical>
+  <critical>Load {techniques_csv} for analysis technique library (49 techniques, 10 categories)</critical>
+  <critical>Load {project_types_csv} for project type detection signals</critical>
+
+  <step n="1" goal="Scan workspace and detect project type">
+    <action>Scan the project root for:
+      - Source code directories (src/, lib/, app/, etc.)
+      - Configuration files (package.json, requirements.txt, Dockerfile, pom.xml, go.mod, Gemfile, etc.)
+      - Documentation (README, docs/, wiki/)
+      - Test directories (test/, tests/, __tests__/, spec/)
+      - Build/deploy configuration (webpack, vite, Dockerfile, docker-compose, CI configs)
+      - Database migrations (migrations/, db/, prisma/, alembic/)
+    </action>
+
+    <action>Load {project_types_csv} and match detection signals against the workspace scan:
+      - Check each project_type's detection_signals against found files and directories
+      - A project can match MULTIPLE types (e.g., fullstack = frontend + backend)
+      - Score each type by number of matching signals
+      - Select the best-matching project type(s)
+    </action>
+
+    <action>Determine project scale:
+      - **Small** (< 50 source files): Quick depth is sufficient for most techniques
+      - **Medium** (50-500 source files): Standard depth recommended
+      - **Large** (500+ source files): Deep depth for critical areas, standard for others
+    </action>
+
+    <output>
+      ## Project Scan Complete
+
+      **Files:** {{file_count}} source files, {{dir_count}} directories
+      **Detected Type:** {{project_type}} ({{confidence}}% match)
+      **Scale:** {{scale}} ({{source_file_count}} source files)
+      **Frameworks Detected:** {{frameworks_list}}
+      **Languages:** {{languages_list}}
+
+      Based on this analysis, I recommend **{{recommended_depth}}** depth analysis
+      with focus on: {{priority_categories}}
+    </output>
+  </step>
+
+  <step n="2" goal="Select analysis techniques and present analysis plan">
+    <action>Load {techniques_csv} — the full library of 49 analysis techniques across 10 categories</action>
+
+    <action>Filter techniques by relevance:
+      1. Match techniques where project_types includes the detected project type (or "all")
+      2. Prioritize techniques from the priority_categories defined in {project_types_csv} for this project type
+      3. Filter by depth: include techniques where depth <= recommended_depth (quick ⊂ standard ⊂ deep)
+      4. Result: a ranked list of applicable techniques, grouped by which artifact they feed into
+    </action>
+
+    <action>Present the analysis plan to the user:</action>
+
+    <output>
+      ## Analysis Plan — {{project_type}} ({{scale}})
+
+      I'll use **{{technique_count}}** analysis techniques across **9 artifacts**.
+
+      ### Priority Techniques ({{priority_category}} focus)
+
+      | # | Technique | Category | Feeds Into | Depth |
+      |---|-----------|----------|------------|-------|
+      {{priority_techniques_table}}
+
+      ### Standard Techniques
+
+      | # | Technique | Category | Feeds Into | Depth |
+      |---|-----------|----------|------------|-------|
+      {{standard_techniques_table}}
+
+      ### Deep Techniques (applied if time permits)
+
+      | # | Technique | Category | Feeds Into | Depth |
+      |---|-----------|----------|------------|-------|
+      {{deep_techniques_table}}
+
+      **Options:**
+      1. **Execute this plan** — Run all selected techniques
+      2. **Adjust depth** — Switch to Quick (fewer techniques) or Deep (more thorough)
+      3. **Add/remove techniques** — Customize the technique selection
+      4. **Focus on specific artifacts** — Only generate selected artifacts (e.g., architecture + security only)
+    </output>
+
+    <action>WAIT for user to confirm or adjust the plan</action>
+
+    <check if="user adjusts depth or techniques">
+      <action>Update the technique list based on user preferences</action>
+      <action>Re-display the updated plan</action>
+      <action>WAIT for confirmation</action>
+    </check>
+
+    <check if="user selects specific artifacts only">
+      <action>Filter techniques to only those feeding the selected artifacts</action>
+      <action>Mark unselected artifacts as "skipped" (will not be generated)</action>
+      <action>Re-display the updated plan</action>
+      <action>WAIT for confirmation</action>
+    </check>
+  </step>
+
+  <step n="3" goal="Artifact 1: Business Overview">
+    <action>Apply the following techniques from the approved plan that feed into business-overview:
+      - Input-to-Output Tracing (if selected): trace critical user flows
+      - Any other techniques targeting this artifact
+    </action>
+    <action>Analyze README, docs, comments, and code structure to determine:
+      - Business domain and purpose
+      - Key user workflows
+      - Business rules embedded in code
+      - Domain terminology (ubiquitous language)
+      - Business value and target users
+    </action>
+    <action>Write to: {re_output}/business-overview.md</action>
+    <action>At the end of the artifact, include a "Techniques Applied" section listing which techniques from the CSV were used</action>
+  </step>
+
+  <step n="4" goal="Artifact 2: Architecture">
+    <action>Apply approved techniques that feed into architecture:
+      - Layer Detection Analysis: identify architectural layers
+      - Module Boundary Mapping: map coupling and cohesion
+      - Dependency Graph Construction: build import graph as Mermaid diagram
+      - Design Pattern Recognition (if deep): identify patterns and anti-patterns
+      - Entry Point Discovery: find all entry points
+      - State Management Mapping (if frontend/fullstack): map state stores
+      - Event Flow Analysis: map event-driven patterns
+      - Data Transformation Chain (if deep): trace data through middleware
+      - Schema Extraction (if data_layer techniques selected): produce ER diagram
+      - Relationship Mapping: map entity relationships
+      - Any other approved techniques targeting this artifact
+    </action>
+    <action>Produce Mermaid diagrams for:
+      - High-level system architecture
+      - Module dependency graph
+      - Data flow diagram
+      - Entity-relationship diagram (if applicable)
+    </action>
+    <action>Write to: {re_output}/architecture.md</action>
+    <action>Include "Techniques Applied" section</action>
+  </step>
+
+  <step n="5" goal="Artifact 3: Code Structure">
+    <action>Apply approved techniques that feed into code-structure:
+      - Dead Code Detection: find unused exports and orphaned files
+      - Naming Convention Audit: check consistency of naming patterns
+      - Environment Variable Mapping: map all env var references
+      - Any other approved techniques targeting this artifact
+    </action>
+    <action>Map the complete codebase structure:
+      - Directory tree with descriptions
+      - File organization patterns
+      - Naming conventions (document dominant patterns)
+      - Module/package boundaries
+      - Entry points (main files, route registrations)
+      - Shared utilities and helpers
+      - Dead code areas flagged for cleanup
+    </action>
+    <action>Write to: {re_output}/code-structure.md</action>
+    <action>Include "Techniques Applied" section</action>
+  </step>
+
+  <step n="6" goal="Artifact 4: API Documentation">
+    <action>Apply approved techniques that feed into api-documentation:
+      - Route Registration Scan: find all HTTP routes
+      - Middleware Chain Mapping: map middleware execution order
+      - Auth Flow Tracing: trace auth lifecycle
+      - API Contract Extraction: extract request/response schemas
+      - API Versioning Detection (if deep): check versioning strategy
+      - Webhook Detection: find webhook handlers
+      - Any other approved techniques targeting this artifact
+    </action>
+    <action>Discover and document all APIs:
+      - REST endpoints (method, path, params, response)
+      - GraphQL schemas and resolvers
+      - gRPC service definitions
+      - WebSocket events
+      - Internal service APIs
+      - Authentication/authorization requirements per endpoint
+      - Middleware chain per route
+    </action>
+    <action>Write to: {re_output}/api-documentation.md</action>
+    <action>Include "Techniques Applied" section</action>
+  </step>
+
+  <step n="7" goal="Artifact 5: Component Inventory">
+    <action>Apply approved techniques that feed into component-inventory:
+      - React Component Tree Analysis (if React): map hierarchy, prop drilling, context
+      - Spring Bean Analysis (if Spring): map DI graph
+      - Next/Nuxt SSR Analysis (if Next/Nuxt): analyze server/client boundary
+      - Mobile Navigation Flow (if mobile): map screen navigation
+      - Schema Extraction: extract DB entity inventory
+      - Message Queue Analysis (if deep + microservices): map producers/consumers
+      - Any other approved techniques targeting this artifact
+    </action>
+    <action>Catalog all significant components:
+      - Classes/modules with responsibilities
+      - UI components (if applicable) with hierarchy
+      - Services and their interfaces
+      - Middleware and interceptors
+      - Database models/entities
+      - Event handlers and listeners
+      - Relationships and dependencies between components
+    </action>
+    <action>Write to: {re_output}/component-inventory.md</action>
+    <action>Include "Techniques Applied" section</action>
+  </step>
+
+  <step n="8" goal="Artifact 6: Technology Stack">
+    <action>Apply approved techniques that feed into technology-stack:
+      - CI/CD Pipeline Analysis: analyze build/test/deploy
+      - Container Configuration Review: analyze Docker/k8s configs
+      - Build System Analysis: analyze bundler/transpiler/package manager
+      - Bundle Size Analysis (if frontend): analyze JS/CSS bundles
+      - Environment Variable Mapping: catalog all env vars
+      - Any other approved techniques targeting this artifact
+    </action>
+    <action>Identify the complete technology stack:
+      - Languages and versions
+      - Frameworks and versions
+      - Build tools and configuration
+      - Database systems
+      - Cache systems
+      - Message queues
+      - Cloud services / infrastructure
+      - CI/CD pipeline configuration
+      - Development tools (linters, formatters, etc.)
+    </action>
+    <action>Write to: {re_output}/technology-stack.md</action>
+    <action>Include "Techniques Applied" section</action>
+  </step>
+
+  <step n="9" goal="Artifact 7: Dependencies">
+    <action>Apply approved techniques that feed into dependencies:
+      - Dependency Vulnerability Check: cross-reference against CVE databases
+      - External API Dependency Mapping: catalog outbound service calls
+      - Third-Party SDK Inventory: catalog integrated SDKs
+      - Any other approved techniques targeting this artifact
+    </action>
+    <action>Analyze all external dependencies:
+      - Direct dependencies with versions
+      - Transitive dependency tree (high level)
+      - License analysis
+      - Known vulnerabilities (flag outdated/CVE-affected packages)
+      - Dependency categorization (runtime, dev, peer)
+      - Heavy dependencies (large packages that could be replaced)
+      - External service dependencies (APIs, SDKs)
+    </action>
+    <action>Write to: {re_output}/dependencies.md</action>
+    <action>Include "Techniques Applied" section</action>
+  </step>
+
+  <step n="10" goal="Artifact 8: Code Quality Assessment">
+    <action>Apply approved techniques that feed into code-quality-assessment:
+      - OWASP Top 10 Quick Scan: check for common vulnerabilities
+      - Auth Pattern Analysis (if deep): deep auth security check
+      - Input Validation Audit: check sanitization patterns
+      - Secret Detection Scan: find hardcoded secrets
+      - Dead Code Detection: find unused code
+      - Code Duplication Analysis: identify copy-paste patterns
+      - Complexity Metrics Scan: measure cyclomatic complexity
+      - Test Coverage Mapping: map tested vs. untested code
+      - ORM Pattern Detection (if data_layer): find N+1 queries
+      - N+1 Query Detection: scan for loop-based queries
+      - Caching Pattern Review (if deep): identify caching gaps
+      - Async Flow Analysis: check error handling in async code
+      - Memory Leak Risk Detection (if deep): find leak patterns
+      - Error Propagation Tracing: trace error handling layers
+      - Any other approved techniques targeting this artifact
+    </action>
+    <action>Assess code quality across dimensions:
+      - **Security:** OWASP findings, auth issues, input validation, secrets
+      - **Reliability:** error handling, async patterns, test coverage
+      - **Maintainability:** complexity, duplication, naming, dead code
+      - **Performance:** N+1 queries, caching gaps, bundle size, memory risks
+      - **Accessibility:** compliance (if UI)
+    </action>
+    <action>For each finding, provide:
+      - Severity: Critical / High / Medium / Low
+      - File and line number
+      - Description of the issue
+      - Recommended fix
+    </action>
+    <action>Write to: {re_output}/code-quality-assessment.md</action>
+    <action>Include "Techniques Applied" section</action>
+  </step>
+
+  <step n="11" goal="Offer deep-dive enhancement (iterative)">
+    <action>After all artifacts are generated, present enhancement options:</action>
+
+    <output>
+      ## All 9 Artifacts Generated
+
+      **Techniques applied:** {{applied_count}} of {{available_count}} selected techniques
+      **Artifacts with High confidence:** {{high_confidence_count}}
+      **Artifacts with Medium confidence:** {{medium_confidence_count}}
+      **Artifacts with Low confidence:** {{low_confidence_count}}
+
+      Would you like to:
+      1. **Deep-dive** — Apply additional techniques to a specific artifact (e.g., run Security deep-dive on code-quality-assessment)
+      2. **Cross-validate** — Verify findings across artifacts for consistency
+      3. **Apply unused techniques** — Run remaining techniques that were deferred
+      4. **Proceed** — Move to Summary and Confidence scoring
+    </output>
+
+    <action>WAIT for user choice</action>
+
+    <check if="user chooses deep-dive (option 1)">
+      <action>Ask which artifact to enhance</action>
+      <action>Show available deep techniques not yet applied for that artifact from {techniques_csv}</action>
+      <action>Apply selected techniques and update the artifact</action>
+      <action>Re-offer enhancement options (loop back to this step)</action>
+    </check>
+
+    <check if="user chooses cross-validate (option 2)">
+      <action>Compare findings across artifacts:
+        - Does the architecture description match the actual code structure?
+        - Do API docs match the route registrations found in code-structure?
+        - Do component relationships match the dependency graph?
+        - Do security findings align with the dependency vulnerability report?
+      </action>
+      <action>Flag inconsistencies and update affected artifacts</action>
+      <action>Re-offer enhancement options (loop back to this step)</action>
+    </check>
+
+    <check if="user chooses apply unused techniques (option 3)">
+      <action>List remaining techniques not yet applied</action>
+      <action>Apply them to the relevant artifacts</action>
+      <action>Update artifacts with new findings</action>
+      <action>Re-offer enhancement options (loop back to this step)</action>
+    </check>
+
+    <check if="user chooses proceed (option 4)">
+      <action>Continue to Step 12</action>
+    </check>
+  </step>
+
+  <step n="12" goal="Artifact 9: Summary and Confidence">
+    <action>Create executive summary:
+      - One-paragraph project description
+      - Key findings (top 5, ranked by impact)
+      - Risk areas (ranked by severity)
+      - Recommended improvements (prioritized)
+      - Confidence scores per artifact (High/Medium/Low) with justification
+      - Analysis metadata:
+        - Project type detected
+        - Depth level used
+        - Techniques applied (count and list)
+        - Techniques skipped (and why)
+        - Total analysis time
+    </action>
+    <action>Write to: {re_output}/reverse-engineering-summary.md</action>
+    <action>Log completion to audit trail</action>
+
+    <output>
+      # D-AIDLC: Reverse Engineering Complete
+
+      **Project Type:** {{project_type}} ({{scale}})
+      **Depth:** {{depth_level}}
+      **Techniques Applied:** {{applied_count}} of 49 available
+
+      **9 Artifacts Created in:** {re_output}/
+      1. business-overview.md
+      2. architecture.md
+      3. code-structure.md
+      4. api-documentation.md
+      5. component-inventory.md
+      6. technology-stack.md
+      7. dependencies.md
+      8. code-quality-assessment.md
+      9. reverse-engineering-summary.md
+
+      **Confidence Scores:**
+      | Artifact | Confidence | Techniques Used |
+      |----------|------------|-----------------|
+      {{confidence_table}}
+
+      > **REVIEW REQUIRED:** {re_output}/reverse-engineering-summary.md
+      >
+      > **WHAT'S NEXT?**
+      > 1. Review artifacts — Deep dive into any area
+      > 2. Re-run with different depth — Adjust for more/less detail
+      > 3. Approve and Continue — Proceed to Requirements Analysis
+    </output>
+  </step>
+</workflow>

@@ -1,0 +1,31 @@
+name: execute-tests
+description: "Run test suites, capture output, and prepare results for AI analysis"
+author: "D-AIDLC"
+
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/ate/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+test_artifacts: "{config_source}:test_artifacts"
+test_framework: "{config_source}:test_framework"
+date: system-generated
+
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/ate/workflows/execute-tests"
+instructions: "{installed_path}/instructions.xml"
+validation: "{installed_path}/checklist.md"
+
+default_output_file: "{test_artifacts}/reports/test-execution-{{date}}.md"
+
+required_tools:
+  - bash
+  - read_file
+  - write_file
+
+tags:
+  - testing
+  - execution
+  - automation
+
+execution_hints:
+  interactive: false
+  autonomous: true
+  iterative: true

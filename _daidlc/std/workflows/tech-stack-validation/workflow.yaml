@@ -1,0 +1,25 @@
+name: tech-stack-validation
+description: "Validate project technology choices against approved technology list"
+author: "D-AIDLC"
+
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/std/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+approved_tech_stack: "{config_source}:approved_tech_stack"
+date: system-generated
+
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/std/workflows/tech-stack-validation"
+instructions: "{installed_path}/instructions.md"
+validation: "{installed_path}/checklist.md"
+
+default_output_file: "C:\Workspaces\dynamodb-subscriber/aidlc-docs/governance/tech-stack-validation-{{date}}.md"
+
+tags:
+  - compliance
+  - technology
+  - governance
+
+execution_hints:
+  interactive: true
+  autonomous: false
+  iterative: false

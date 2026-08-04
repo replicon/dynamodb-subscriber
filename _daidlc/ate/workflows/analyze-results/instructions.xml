@@ -1,0 +1,114 @@
+<workflow>
+  <critical>Communicate all responses in {communication_language}</critical>
+  <critical>Generate all documents in {document_output_language}</critical>
+  <critical>Categorize EVERY failure — no unclassified failures allowed</critical>
+
+  <step n="1" goal="Load test execution results">
+    <action>Load the most recent test execution report</action>
+    <action>Parse:
+      - Total tests, passed, failed, skipped
+      - Failed test names and stack traces
+      - Coverage data
+      - Execution times
+    </action>
+
+    <check if="no execution report found">
+      <output>No test execution report found. Please run Execute Tests first.</output>
+      <halt />
+    </check>
+  </step>
+
+  <step n="2" goal="Categorize each failure">
+    <action>For each failed test, analyze the stack trace and error message to classify:
+
+      **Category 1: Test Bug** (problem in the test, not the code)
+      - Incorrect assertion (expected wrong value)
+      - Missing mock/stub setup
+      - Test environment issue (missing fixture, wrong config)
+      - Async timing issue (race condition in test)
+      - Stale snapshot
+
+      **Category 2: Code Bug** (actual defect in production code)
+      - Logic error (wrong behavior)
+      - Missing error handling
+      - Type error or null reference
+      - API contract violation
+      - Security vulnerability
+
+      **Category 3: Environment Issue** (infrastructure problem)
+      - Missing dependency
+      - Database connection failure
+      - Network timeout
+      - Permission error
+      - Configuration mismatch
+
+      **Category 4: Flaky Test** (intermittent failure)
+      - Passes sometimes, fails sometimes
+      - Timing-dependent
+      - Order-dependent
+    </action>
+
+    <action>For each failure, also determine:
+      - Severity: Critical / High / Medium / Low
+      - Fix complexity: Simple / Moderate / Complex
+      - Suggested fix (specific code change or approach)
+    </action>
+  </step>
+
+  <step n="3" goal="Identify patterns and clusters">
+    <action>Look for patterns across failures:
+      - Multiple failures in the same module (systemic issue)
+      - Failures sharing the same root cause
+      - Failures related to recent code changes
+      - Failures in areas with low coverage
+    </action>
+  </step>
+
+  <step n="4" goal="Generate fix recommendations">
+    <action>For each failure category, provide actionable fixes:
+
+      **Test Bugs:**
+      - Specific assertion corrections
+      - Missing mock configurations
+      - Environment setup fixes
+
+      **Code Bugs:**
+      - Root cause analysis
+      - Suggested code fix with file path and line
+      - Regression test recommendation
+
+      **Environment Issues:**
+      - Missing dependency or configuration
+      - Setup step needed
+
+      **Flaky Tests:**
+      - Stabilization approach
+      - Whether to quarantine while fixing
+    </action>
+  </step>
+
+  <step n="5" goal="Create analysis report">
+    <action>Compile the complete analysis into the template</action>
+    <action>Include priority-ordered fix list</action>
+    <action>Write to: {default_output_file}</action>
+    <action>Log to audit trail</action>
+
+    <output>
+      # D-AIDLC: Test Analysis Complete
+
+      **Summary:**
+      - {{test_bug_count}} test bugs (fix the tests)
+      - {{code_bug_count}} code bugs (fix the code)
+      - {{env_count}} environment issues (fix the setup)
+      - {{flaky_count}} flaky tests (stabilize or quarantine)
+
+      **Top Priority Fixes:**
+      {{top_3_fixes}}
+
+      > **WHAT'S NEXT?**
+      > 1. Fix code bugs first (highest impact)
+      > 2. Fix test bugs (improve reliability)
+      > 3. Re-run tests after fixes
+    </output>
+  </step>
+</workflow>

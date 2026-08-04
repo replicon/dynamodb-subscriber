@@ -1,0 +1,88 @@
+<workflow>
+  <critical>Communicate all responses in {communication_language}</critical>
+  <critical>Generate all documents in {document_output_language}</critical>
+
+  <step n="1" goal="Load context and identify infrastructure scope">
+    <action>Load architecture document: {planning_artifacts}/*architecture*.md</action>
+    <action>Load NFR design document: {planning_artifacts}/*nfr-design*.md</action>
+    <action>Identify all services, databases, caches, queues, and external dependencies</action>
+    <output>Infrastructure scope: {{service_count}} services, {{db_count}} databases, {{external_count}} external dependencies</output>
+  </step>
+
+  <step n="2" goal="Design Service Topology">
+    <action>Map each application service to infrastructure:
+      - Compute platform (containers, serverless, VMs)
+      - Network placement (public, private, DMZ)
+      - Service mesh or API gateway
+      - Inter-service communication (REST, gRPC, events)
+      - Load balancing configuration
+    </action>
+    <action>Create a Mermaid diagram of the service topology</action>
+  </step>
+
+  <step n="3" goal="Design Data Infrastructure">
+    <action>Map data requirements to infrastructure:
+      - Primary database(s) — engine, size, replication
+      - Cache layer(s) — engine, cluster mode, persistence
+      - Message queue(s) — engine, partitions, consumers
+      - Object storage — bucket structure, lifecycle rules
+      - Search engine (if needed) — engine, index strategy
+    </action>
+  </step>
+
+  <step n="4" goal="Design CI/CD Pipeline">
+    <action>Define the deployment pipeline:
+      - Source control branching strategy
+      - Build stage (compile, lint, unit test)
+      - Test stage (integration, E2E, security scan)
+      - Deploy stage (staging, production)
+      - Rollback mechanism
+      - Feature flag integration (if applicable)
+    </action>
+    <action>Create a Mermaid diagram of the CI/CD pipeline</action>
+  </step>
+
+  <step n="5" goal="Define Environment Matrix">
+    <action>Define all environments:
+
+      | Aspect | Development | Staging | Production |
+      |--------|-------------|---------|------------|
+      | Purpose | {{dev_purpose}} | {{staging_purpose}} | {{prod_purpose}} |
+      | Scale | {{dev_scale}} | {{staging_scale}} | {{prod_scale}} |
+      | Data | {{dev_data}} | {{staging_data}} | {{prod_data}} |
+      | Access | {{dev_access}} | {{staging_access}} | {{prod_access}} |
+    </action>
+  </step>
+
+  <step n="6" goal="Define Infrastructure as Code Strategy">
+    <action>Specify IaC approach:
+      - Tool (Terraform, CloudFormation, Pulumi, CDK)
+      - Module structure
+      - State management
+      - Secret injection
+      - Environment variable management
+    </action>
+  </step>
+
+  <step n="7" goal="Compile Infrastructure Design Document">
+    <action>Compile all sections into the template</action>
+    <action>Validate Mermaid diagrams</action>
+    <action>Run content validation</action>
+    <action>Write to: {default_output_file}</action>
+
+    <output>
+      # D-AIDLC: Infrastructure Design Complete
+
+      **Artifacts Created:**
+      - {default_output_file}
+
+      > **REVIEW REQUIRED:** {default_output_file}
+      >
+      > **WHAT'S NEXT?**
+      > 1. Request Changes - I'll revise based on your feedback
+      > 2. Approve and Continue - Proceed to Epics and Stories
+    </output>
+
+    <action>Log completion to audit trail</action>
+  </step>
+</workflow>

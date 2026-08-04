@@ -1,0 +1,130 @@
+<workflow>
+  <critical>Communicate all responses in {communication_language}</critical>
+  <critical>Generate all documents in {document_output_language}</critical>
+  <critical>All NFR targets MUST be measurable with specific numbers</critical>
+
+  <step n="1" goal="Load context and identify NFR scope">
+    <action>Load requirements document: {planning_artifacts}/*requirements*.md</action>
+    <action>Load architecture document: {planning_artifacts}/*architecture*.md</action>
+    <action>Load PRD if available: {planning_artifacts}/*prd*.md</action>
+
+    <action>Identify all NFR-relevant aspects from the loaded context:
+      - Performance implications (data volumes, user counts, response expectations)
+      - Security requirements (auth, data sensitivity, compliance needs)
+      - Scalability needs (growth projections, peak vs normal load)
+      - Reliability expectations (uptime needs, data criticality)
+      - Observability needs (debugging, monitoring, alerting)
+    </action>
+
+    <output>
+      ## NFR Scope Analysis
+
+      Based on the requirements and architecture, here are the NFR categories
+      that need attention:
+
+      {{nfr_categories_summary}}
+
+      Proceeding to detailed analysis for each category.
+    </output>
+  </step>
+
+  <step n="2" goal="Define Performance Requirements">
+    <action>Analyze all performance-sensitive operations from requirements</action>
+
+    <questions>
+      Create questions file if any of these are unclear:
+      - Expected concurrent users (normal and peak)
+      - Acceptable response times for key operations
+      - Data volume expectations (current and 12-month projection)
+      - Batch processing requirements and windows
+      - Real-time vs near-real-time vs eventual consistency needs
+    </questions>
+
+    <action>Document performance targets with specific numbers:
+      - API response time targets (p50, p95, p99)
+      - Throughput targets (requests per second)
+      - Database query time limits
+      - Page load time targets (if UI)
+      - Batch processing time windows
+    </action>
+  </step>
+
+  <step n="3" goal="Define Security Requirements">
+    <action>Analyze security needs from requirements and architecture</action>
+
+    <action>Document security requirements referencing standards:
+      - Authentication method and requirements
+      - Authorization model (RBAC, ABAC, etc.)
+      - Data encryption (at rest and in transit)
+      - Input validation standards (reference OWASP A03)
+      - Session management requirements
+      - API security (rate limiting, API keys, OAuth)
+      - Secrets management approach
+      - Audit logging requirements for security events
+      - Vulnerability scanning requirements
+    </action>
+
+    <action>Reference specific OWASP Top 10 categories where applicable</action>
+  </step>
+
+  <step n="4" goal="Define Scalability Requirements">
+    <action>Document scalability targets:
+      - Horizontal scaling targets (min/max instances)
+      - Vertical scaling limits
+      - Database scaling strategy
+      - Storage growth projections
+      - Cache sizing requirements
+      - Connection pool sizing
+      - Message queue throughput targets
+    </action>
+  </step>
+
+  <step n="5" goal="Define Reliability Requirements">
+    <action>Document reliability targets:
+      - Uptime SLA (99.9%, 99.95%, 99.99%)
+      - Recovery Time Objective (RTO)
+      - Recovery Point Objective (RPO)
+      - Failover requirements
+      - Data durability targets
+      - Backup frequency and retention
+      - Disaster recovery requirements
+      - Circuit breaker and retry policies
+    </action>
+  </step>
+
+  <step n="6" goal="Define Observability Requirements">
+    <action>Document observability requirements:
+      - Logging standards (structured logging, log levels)
+      - Metrics collection (application, infrastructure, business)
+      - Distributed tracing requirements
+      - Alerting thresholds and escalation paths
+      - Dashboard requirements
+      - Health check endpoints
+      - Error tracking and reporting
+    </action>
+  </step>
+
+  <step n="7" goal="Create NFR Requirements Document">
+    <action>Compile all NFR categories into the template</action>
+    <action>Assign unique identifiers: NFR-PERF-001, NFR-SEC-001, etc.</action>
+    <action>Set priority for each NFR (Critical, High, Medium, Low)</action>
+    <action>Map each NFR to related functional requirements</action>
+    <action>Run content validation on the output</action>
+    <action>Write to: {default_output_file}</action>
+
+    <output>
+      # D-AIDLC: NFR Requirements Complete
+
+      **Artifacts Created:**
+      - {default_output_file}
+
+      > **REVIEW REQUIRED:** {default_output_file}
+      >
+      > **WHAT'S NEXT?**
+      > 1. Request Changes - I'll revise based on your feedback
+      > 2. Approve and Continue - Proceed to NFR Design
+    </output>
+
+    <action>Log completion to audit trail</action>
+  </step>
+</workflow>

@@ -1,0 +1,35 @@
+code: gov
+name: "D-AIDLC Governance Module"
+description: "Audit trail, stage validation, content validation, and questions-in-files governance layer"
+version: "1.0.0"
+default_selected: true
+
+header: "Governance Configuration"
+subheader: "Configure governance controls for your D-AIDLC project"
+
+governance_level:
+  prompt: "What level of governance do you need?"
+  default: "standard"
+  result: "{value}"
+  single-select:
+    - value: "light"
+      label: "Light - Audit trail only, no stage gates"
+    - value: "standard"
+      label: "Standard - Audit trail + stage gates + content validation (Recommended)"
+    - value: "strict"
+      label: "Strict - Full governance with mandatory questions-in-files and no overrides"
+
+audit_file:
+  prompt: "Where should the audit trail be stored?"
+  default: "{output_folder}/audit/audit.md"
+  result: "C:\Workspaces\dynamodb-subscriber/{value}"
+
+questions_folder:
+  prompt: "Where should question files be created?"
+  default: "{output_folder}/governance/questions"
+  result: "C:\Workspaces\dynamodb-subscriber/{value}"
+
+directories:
+  - "{output_folder}/audit"
+  - "{output_folder}/governance"
+  - "{output_folder}/governance/questions"

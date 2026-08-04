@@ -1,0 +1,54 @@
+code: ate
+name: "D-AIDLC AI Test Engine"
+description: "AI-powered test strategy, generation, execution, analysis, coverage, and regression detection"
+version: "1.0.0"
+default_selected: true
+
+header: "AI Test Engine Configuration"
+subheader: "Configure AI-powered testing capabilities"
+
+test_artifacts:
+  prompt: "Where should test artifacts be stored?"
+  default: "{output_folder}/testing"
+  result: "C:\Workspaces\dynamodb-subscriber/{value}"
+
+test_framework:
+  prompt: "Primary test framework (auto-detect if unsure)?"
+  default: "auto-detect"
+  result: "{value}"
+  single-select:
+    - value: "auto-detect"
+      label: "Auto-detect from project dependencies (Recommended)"
+    - value: "jest"
+      label: "Jest (JavaScript/TypeScript)"
+    - value: "vitest"
+      label: "Vitest (Vite-based projects)"
+    - value: "pytest"
+      label: "Pytest (Python)"
+    - value: "other"
+      label: "Other (specify in project context)"
+
+e2e_framework:
+  prompt: "E2E test framework (if applicable)?"
+  default: "auto-detect"
+  result: "{value}"
+  single-select:
+    - value: "auto-detect"
+      label: "Auto-detect (Recommended)"
+    - value: "playwright"
+      label: "Playwright"
+    - value: "cypress"
+      label: "Cypress"
+    - value: "none"
+      label: "No E2E testing"
+
+coverage_target:
+  prompt: "Minimum test coverage target?"
+  default: "80"
+  result: "{value}"
+
+directories:
+  - "{test_artifacts}"
+  - "{test_artifacts}/reports"
+  - "{test_artifacts}/coverage"
+  - "{test_artifacts}/regression"

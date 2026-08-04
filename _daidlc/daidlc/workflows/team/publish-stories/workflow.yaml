@@ -1,0 +1,68 @@
+name: publish-stories
+description: "Publish D-AIDLC stories to GitHub Issues for PM/leadership visibility and external tracking"
+author: "D-AIDLC"
+
+# Critical variables from config
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+implementation_artifacts: "{config_source}:implementation_artifacts"
+
+# Workflow components
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/workflows/team/publish-stories"
+instructions: "{installed_path}/instructions.md"
+
+# Variables and inputs
+project_context: "**/project-context.md"
+project_name: "{config_source}:project_name"
+
+# Input files
+team_dir: "C:\Workspaces\dynamodb-subscriber/aidlc-docs/team"
+roster_file: "{team_dir}/team-roster.yaml"
+sprint_status_file: "{implementation_artifacts}/sprint-status.yaml"
+assignments_file: "{team_dir}/sprint-assignments.yaml"
+issue_map_file: "{team_dir}/github-issue-map.yaml"
+
+# Story files location
+story_dir: "{implementation_artifacts}"
+
+# Smart input file references
+input_file_patterns:
+  sprint_status:
+    description: "Current sprint status with all stories and their statuses"
+    whole: "{implementation_artifacts}/sprint-status.yaml"
+    load_strategy: "FULL_LOAD"
+  assignments:
+    description: "Sprint assignments mapping stories to developers"
+    whole: "{team_dir}/sprint-assignments.yaml"
+    load_strategy: "FULL_LOAD"
+  roster:
+    description: "Team roster with member details and GitHub usernames"
+    whole: "{team_dir}/team-roster.yaml"
+    load_strategy: "FULL_LOAD"
+  issue_map:
+    description: "Existing GitHub issue map for idempotent updates"
+    whole: "{team_dir}/github-issue-map.yaml"
+    load_strategy: "FULL_LOAD"
+  story_files:
+    description: "Story markdown files for content extraction"
+    whole: "{implementation_artifacts}/*.md"
+    load_strategy: "SELECTIVE_LOAD"
+
+# Output configuration
+default_output_file: "{issue_map_file}"
+
+tags:
+  - team
+  - github
+  - issues
+  - publish
+  - scrum-master
+
+execution_hints:
+  interactive: false
+  autonomous: true
+  iterative: false
+  requires_cli: "gh"

@@ -1,0 +1,13 @@
+domain,signals,complexity_level,suggested_workflow,web_searches
+govcon,"government contract,DCAA,FAR,DFARS,indirect rate,costpoint,CMMC,defense contractor,GovCon",high,advanced,"government contract ERP architecture, DCAA compliant systems, CMMC security architecture"
+construction,"construction,job costing,prevailing wage,certified payroll,retainage,AIA billing,change order,general contractor,ComputerEase",high,advanced,"construction accounting architecture, job cost system design, prevailing wage engine patterns"
+aec,"architecture,engineering,A&E,AEC,design firm,Vantagepoint,Ajera,multiplier,utilization,subconsultant",medium,enhanced,"A&E project accounting architecture, resource planning systems, AIA billing integration"
+professional_services,"professional services,CPA,consulting,creative agency,Maconomy,Workbook,utilization,billable hours,retainer,PSO",medium,standard,"professional services automation architecture, PSA system design, resource utilization patterns"
+e_commerce,"shopping,cart,checkout,payment,products,store",medium,standard,"ecommerce architecture patterns, payment processing, inventory management"
+fintech,"banking,payment,trading,finance,money,investment",high,enhanced,"financial security, PCI compliance, trading algorithms, fraud detection"
+healthcare,"medical,diagnostic,clinical,patient,hospital,health",high,enhanced,"HIPAA compliance, medical data security, FDA regulations, health tech"
+productivity,"productivity,workflow,tasks,management,business,tools",medium,standard,"collaboration patterns, real-time editing, notification systems, integration"
+process_control,"industrial automation,process control,PLC,SCADA,DCS,HMI,operational technology,control system,cyberphysical,MES,instrumentation,I&C,P&ID",high,advanced,"industrial process control architecture, SCADA system design, OT cybersecurity architecture, real-time control systems"
+building_automation,"building automation,BAS,BMS,HVAC,smart building,fire alarm,fire protection,fire suppression,life safety,elevator,DDC,access control,sequence of operations,commissioning",high,advanced,"building automation architecture, BACnet integration patterns, smart building design, building management system security"
+cloud_saas,"cloud,SaaS,AWS,Azure,GCP,OCI,SRE,observability,FinOps,Kubernetes,serverless,multi-region,monitoring,platform",high,advanced,"cloud architecture patterns, SRE observability design, FinOps cost optimization, multi-region DR, managed services comparison"
+general,"",low,standard,"general software architecture best practices"

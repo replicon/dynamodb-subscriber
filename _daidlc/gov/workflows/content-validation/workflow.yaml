@@ -1,0 +1,23 @@
+name: content-validation
+description: "Validate artifact content quality: Mermaid syntax, markdown structure, no duplicates"
+author: "D-AIDLC"
+
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/gov/module.yaml"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/gov/workflows/content-validation"
+instructions: "{installed_path}/instructions.md"
+validation: "{installed_path}/checklist.md"
+template: false
+
+tags:
+  - governance
+  - validation
+  - quality
+
+execution_hints:
+  interactive: false
+  autonomous: true
+  iterative: false

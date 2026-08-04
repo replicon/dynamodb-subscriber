@@ -1,0 +1,26 @@
+name: validate-stage
+description: "Validate stage completion criteria before allowing progression to next stage"
+author: "D-AIDLC"
+
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/gov/module.yaml"
+audit_file: "{config_source}:audit_file"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/gov/workflows/validate-stage"
+instructions: "{installed_path}/instructions.xml"
+validation: "{installed_path}/checklist.md"
+template: false
+
+state_file: "C:\Workspaces\dynamodb-subscriber/aidlc-docs/aidlc-state.md"
+
+tags:
+  - governance
+  - validation
+  - gate
+
+execution_hints:
+  interactive: true
+  autonomous: false
+  iterative: false

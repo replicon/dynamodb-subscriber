@@ -1,0 +1,109 @@
+<workflow>
+  <critical>Communicate all responses in {communication_language}</critical>
+  <critical>Generate all documents in {document_output_language}</critical>
+
+  <step n="1" goal="Detect test ecosystem and project structure">
+    <action>Scan project for:
+      - package.json / requirements.txt / build files
+      - Existing test directories and files
+      - Test framework dependencies (jest, vitest, pytest, mocha, etc.)
+      - E2E framework dependencies (playwright, cypress, selenium)
+      - CI/CD configuration with test stages
+      - Existing coverage configuration
+    </action>
+
+    <action>Detect the tech stack:
+      - Language(s): JavaScript/TypeScript, Python, Go, Java, etc.
+      - Framework(s): React, Next.js, Express, Django, FastAPI, etc.
+      - Database(s): PostgreSQL, MongoDB, etc.
+      - API type: REST, GraphQL, gRPC
+    </action>
+
+    <output>
+      ## Test Ecosystem Detection
+
+      - **Language:** {{language}}
+      - **Framework:** {{framework}}
+      - **Test Framework:** {{test_framework}} ({{detected_or_recommended}})
+      - **E2E Framework:** {{e2e_framework}} ({{detected_or_recommended}})
+      - **Existing Tests:** {{existing_test_count}} files
+      - **Current Coverage:** {{current_coverage}}%
+    </output>
+  </step>
+
+  <step n="2" goal="Define test pyramid and coverage targets">
+    <action>Design the test pyramid for this project:
+
+      Unit Tests (base):
+      - Target: {{unit_percentage}}% of total tests
+      - Coverage target: {{unit_coverage}}% line coverage
+      - Scope: Individual functions, methods, components
+      - Speed: < 10ms per test
+
+      Integration Tests (middle):
+      - Target: {{integration_percentage}}% of total tests
+      - Coverage: API endpoints, service interactions, DB queries
+      - Scope: Component interactions, API contracts
+      - Speed: < 500ms per test
+
+      E2E Tests (top):
+      - Target: {{e2e_percentage}}% of total tests
+      - Coverage: Critical user journeys only
+      - Scope: Full system workflows
+      - Speed: < 30s per test
+    </action>
+  </step>
+
+  <step n="3" goal="Map test categories to features">
+    <action>For each major feature/module in the architecture:
+      - Identify which test types are needed
+      - Estimate test count per category
+      - Identify test data requirements
+      - Identify mocking/stubbing needs
+      - Identify external dependency handling
+    </action>
+  </step>
+
+  <step n="4" goal="Define test infrastructure">
+    <action>Specify test infrastructure:
+      - Test database strategy (in-memory, test containers, shared)
+      - Mock/stub strategy (MSW, nock, unittest.mock, etc.)
+      - Test fixtures and factories
+      - CI test parallelization
+      - Test environment variables
+      - Snapshot testing policy
+    </action>
+  </step>
+
+  <step n="5" goal="Define test quality standards">
+    <action>Document test quality rules:
+      - Naming conventions (describe/it, test_, Given/When/Then)
+      - Assertion best practices (one logical assertion per test)
+      - Test isolation requirements (no shared state between tests)
+      - Flaky test policy (quarantine, fix within N days)
+      - Test review requirements (part of code review)
+      - Performance test thresholds (max test suite time)
+    </action>
+  </step>
+
+  <step n="6" goal="Create Test Strategy Document">
+    <action>Compile all sections into the template</action>
+    <action>Run content validation</action>
+    <action>Write to: {default_output_file}</action>
+
+    <output>
+      # D-AIDLC: Test Strategy Complete
+
+      **Artifacts Created:**
+      - {default_output_file}
+
+      > **REVIEW REQUIRED:** {default_output_file}
+      >
+      > **WHAT'S NEXT?**
+      > 1. Request Changes - I'll revise the strategy
+      > 2. Approve and Continue - Proceed to Generate Tests
+    </output>
+
+    <action>Log completion to audit trail</action>
+  </step>
+</workflow>

@@ -1,0 +1,27 @@
+name: compliance-check
+description: "Validate against regulatory compliance standards (GDPR, SOC2, HIPAA)"
+author: "D-AIDLC"
+
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/std/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+compliance_standards: "{config_source}:compliance_standards"
+date: system-generated
+
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/std/workflows/compliance-check"
+instructions: "{installed_path}/instructions.md"
+validation: "{installed_path}/checklist.md"
+template: "{installed_path}/templates/compliance-report-template.md"
+
+default_output_file: "C:\Workspaces\dynamodb-subscriber/aidlc-docs/governance/compliance-report-{{date}}.md"
+
+tags:
+  - compliance
+  - regulatory
+  - governance
+
+execution_hints:
+  interactive: true
+  autonomous: false
+  iterative: false

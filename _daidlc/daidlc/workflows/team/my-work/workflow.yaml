@@ -1,0 +1,43 @@
+name: my-work
+description: "Show a developer their assigned sprint stories, status, branches, and recommended next actions"
+author: "D-AIDLC"
+
+# Critical variables from config
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+implementation_artifacts: "{config_source}:implementation_artifacts"
+
+# Workflow components
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/workflows/team/my-work"
+instructions: "{installed_path}/instructions.md"
+
+# Variables and inputs
+project_context: "**/project-context.md"
+project_name: "{config_source}:project_name"
+
+# Input files
+team_dir: "C:\Workspaces\dynamodb-subscriber/aidlc-docs/team"
+assignments_file: "{team_dir}/sprint-assignments.yaml"
+
+# Smart input file references
+input_file_patterns:
+  assignments:
+    description: "Sprint assignments for all team members"
+    whole: "{team_dir}/sprint-assignments.yaml"
+    load_strategy: "FULL_LOAD"
+
+# No default output file — this is a read-only dashboard workflow
+
+tags:
+  - team
+  - developer
+  - dashboard
+  - utility
+
+execution_hints:
+  interactive: true
+  autonomous: false
+  iterative: false

@@ -1,0 +1,27 @@
+code: core
+name: "D-AIDLC Core"
+description: "Deltek AI-Driven Development Life Cycle - Core Framework"
+version: "1.0.0"
+
+header: "D-AIDLC Core Configuration"
+subheader: "Configure the foundational settings for your D-AIDLC workspace"
+
+user_name:
+  prompt: "What should agents call you?"
+  default: "Developer"
+  result: "{value}"
+
+communication_language:
+  prompt: "What language should agents communicate in?"
+  default: "English"
+  result: "{value}"
+
+document_output_language:
+  prompt: "What language should generated documents use?"
+  default: "English"
+  result: "{value}"
+
+output_folder:
+  prompt: "Where should D-AIDLC output files be saved?"
+  default: "aidlc-docs"
+  result: "C:\Workspaces\dynamodb-subscriber/{value}"
