@@ -129,6 +129,8 @@ trimmedError.name = 'TrimmedDataAccessException';
 return callback(trimmedError);
 ```
 
+**Why the test is unreliable after commit 703e9a5:** Commit `703e9a5` changed the production check from `err.code` to `err.name`. The test still simulates with `{code: ...}`, so `err.name` is `undefined` and the recovery block is never entered — `shard.iterator` is NOT updated. Instead `callback(err)` propagates the error to `async.each`'s outer callback, which calls `this.emit('error', err)`. With no `'error'` listener in the test, Node.js throws an uncaught exception that Mocha catches as a test failure. The test was written for the old `err.code` check and was not updated when the production code was fixed.
+
 ---
 
 ### Finding: REL-04 — No Timeout on AWS API Calls
@@ -149,7 +151,7 @@ this._ddbStream = new DynamoDBStreams({
 ---
 
 ### Finding: REL-05 — `DynamodDBReadable` Has No Stream Resume After Backpressure
-**Severity:** Medium
+**Severity:** High
 **File:** `index.js:236–239`
 **Code:**
 ```javascript

@@ -7,7 +7,7 @@
 
 ## Architectural Style
 
-**Single-module library** following the **EventEmitter + Adapter** pattern. No multi-layer separation — all logic resides in one file (`index.js`, 251 lines). The design mirrors the standard Node.js core pattern: extend a base class (`EventEmitter`, `Readable`) and encapsulate protocol details internally.
+**Single-module library** following the **EventEmitter + Adapter** pattern. No multi-layer separation — all logic resides in one file (`index.js`, 252 lines). The design mirrors the standard Node.js core pattern: extend a base class (`EventEmitter`, `Readable`) and encapsulate protocol details internally.
 
 The library is **not** a backend application, REST service, or CLI — it is a pure library with no entry point of its own. Callers initialize it and receive events.
 
@@ -207,7 +207,7 @@ stateDiagram-v2
 
 - If `start()` is called twice, two separate `tempus-fugit` jobs are created (two polling loops on the same shards). Records will be emitted twice.
 - `DynamodDBReadable._read()` calls `subscriber.start()`. Node.js calls `_read()` every time the stream's internal buffer drains. If the consumer is fast and the stream buffer drains frequently, multiple `start()` calls accumulate multiple schedulers.
-- **File:** `index.js:245–247` — no guard on `_read()`; `index.js:161` — no guard on `start()`
+- **File:** `index.js:244–246` — no guard on `_read()`; `index.js:161` — no guard on `start()`
 
 **Recommended fix:** Add an `_started` flag:
 ```javascript

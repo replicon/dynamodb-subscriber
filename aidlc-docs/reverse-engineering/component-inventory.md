@@ -39,8 +39,8 @@ The library has **2 public classes** and **4 core methods**. All code lives in `
 
 | Method | Visibility | Calls | Called By |
 |--------|-----------|-------|-----------|
-| `constructor(params)` | public | `DynamoDBStreams()`, `DynamoDB()` (conditional) | Consumer |
-| `start()` | public | `DynamoDB.describeTable`, `DynamoDBStreams.listStreams`, `_getOpenShards`, `schedule` | Consumer |
+| `constructor(params)` | public | `DynamoDBStreams()` | Consumer |
+| `start()` | public | `DynamoDB()` (conditional), `DynamoDB.describeTable`, `DynamoDBStreams.listStreams`, `_getOpenShards`, `schedule` | Consumer |
 | `stop()` | public | `this._job.cancel()` | Consumer |
 | `_getOpenShards(cb)` | private | `DynamoDBStreams.describeStream`, `DynamoDBStreams.getShardIterator` | `start()`, `_process()` |
 | `_process(job)` | private | `DynamoDBStreams.getRecords`, `_getOpenShards`, `emit` | `tempus-fugit` scheduler |

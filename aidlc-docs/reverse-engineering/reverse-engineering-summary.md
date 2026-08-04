@@ -7,7 +7,7 @@
 
 ## Project Description
 
-`@replicon/dynamodb-subscriber` is a compact (251-line), single-file Node.js library that abstracts the AWS DynamoDB Streams API. It polls one or more stream shards at a configurable interval, manages shard iterator lifecycle automatically (including TrimmedDataAccessException recovery and shard re-discovery), and exposes incoming change records via two interfaces: an EventEmitter and a Readable stream. Published internally to Replicon's GitHub Packages registry at version 1.7.2.
+`@replicon/dynamodb-subscriber` is a compact (252-line), single-file Node.js library that abstracts the AWS DynamoDB Streams API. It polls one or more stream shards at a configurable interval, manages shard iterator lifecycle automatically (including TrimmedDataAccessException recovery and shard re-discovery), and exposes incoming change records via two interfaces: an EventEmitter and a Readable stream. Published internally to Replicon's GitHub Packages registry at version 1.7.2.
 
 Despite its small surface area, the deep-dive pass uncovered **3 additional High-severity bugs** beyond the initial analysis — all in the core reliability path — bringing the total to **1 Critical and 6 High** findings.
 
