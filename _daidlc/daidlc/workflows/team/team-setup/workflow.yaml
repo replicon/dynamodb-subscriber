@@ -1,0 +1,31 @@
+name: team-setup
+description: "Define team structure, members, roles, and module ownership for 10-40 person development teams"
+author: "D-AIDLC"
+
+# Critical variables from config
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+# Workflow components
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/workflows/team/team-setup"
+instructions: "{installed_path}/instructions.md"
+template: "{installed_path}/template-roster.md"
+template_git_workflow: "{installed_path}/template-git-workflow.md"
+template_pr: "{installed_path}/template-pr-template.md"
+
+# Variables and inputs
+project_context: "**/project-context.md"
+project_name: "{config_source}:project_name"
+
+# Output configuration
+team_dir: "C:\Workspaces\dynamodb-subscriber/aidlc-docs/team"
+roster_file: "{team_dir}/team-roster.yaml"
+module_owners_file: "{team_dir}/module-owners.yaml"
+codeowners_file: "{team_dir}/CODEOWNERS"
+git_workflow_file: "{team_dir}/git-workflow.md"
+pr_template_file: "C:\Workspaces\dynamodb-subscriber/.github/pull-request-template.md"
+
+# No smart input file references needed - this workflow collects information from the user

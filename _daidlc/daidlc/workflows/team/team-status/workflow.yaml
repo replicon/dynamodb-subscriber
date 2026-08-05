@@ -1,0 +1,55 @@
+# Team Status - Team-Wide Dashboard
+name: team-status
+description: "Team-wide dashboard showing all progress, blockers, velocity trends, and per-developer status for PMs, SMs, and managers overseeing 10-40 person teams."
+author: "D-AIDLC"
+
+# Critical variables from config
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+# Workflow components
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/workflows/team/team-status"
+instructions: "{installed_path}/instructions.md"
+template: "{installed_path}/template-report.md"
+
+# Variables and inputs
+project_context: "**/project-context.md"
+project_name: "{config_source}:project_name"
+implementation_artifacts: "{config_source}:implementation_artifacts"
+
+# Team data directory
+team_dir: "C:\Workspaces\dynamodb-subscriber/aidlc-docs/team"
+reports_dir: "{team_dir}/reports"
+
+# Output configuration
+default_output_file: "{reports_dir}/sprint-{sprint_number}-status-{date}.md"
+
+# Smart input file references
+input_file_patterns:
+  team_roster:
+    description: "Team structure, members, roles, and sub-team assignments"
+    whole: "{team_dir}/team-roster.yaml"
+    load_strategy: "FULL_LOAD"
+  sprint_assignments:
+    description: "Current sprint assignments mapping developers to stories"
+    whole: "{team_dir}/sprint-assignments.yaml"
+    load_strategy: "FULL_LOAD"
+  sprint_status:
+    description: "Story statuses from sprint planning"
+    whole: "{implementation_artifacts}/sprint-status.yaml"
+    load_strategy: "FULL_LOAD"
+  aidlc_state:
+    description: "Project lifecycle state"
+    whole: "C:\Workspaces\dynamodb-subscriber/aidlc-docs/aidlc-state.md"
+    load_strategy: "FULL_LOAD"
+  audit:
+    description: "Recent audit activity"
+    whole: "C:\Workspaces\dynamodb-subscriber/aidlc-docs/audit/audit.md"
+    load_strategy: "FULL_LOAD"
+  velocity_history:
+    description: "Historical velocity data from previous sprints (optional)"
+    whole: "{team_dir}/velocity-history.yaml"
+    load_strategy: "FULL_LOAD"

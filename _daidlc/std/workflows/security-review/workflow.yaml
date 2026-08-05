@@ -1,0 +1,26 @@
+name: security-review
+description: "OWASP-based security review of code and architecture"
+author: "D-AIDLC"
+
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/std/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+security_scan_level: "{config_source}:security_scan_level"
+date: system-generated
+
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/std/workflows/security-review"
+instructions: "{installed_path}/instructions.xml"
+validation: "{installed_path}/checklist.md"
+
+default_output_file: "C:\Workspaces\dynamodb-subscriber/aidlc-docs/governance/security-review-{{date}}.md"
+
+tags:
+  - compliance
+  - security
+  - owasp
+
+execution_hints:
+  interactive: false
+  autonomous: true
+  iterative: false

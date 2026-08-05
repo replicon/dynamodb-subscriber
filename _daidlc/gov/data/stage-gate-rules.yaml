@@ -1,0 +1,178 @@
+# D-AIDLC Stage Gate Rules
+# Defines pass/fail criteria for each stage transition
+
+gates:
+  workspace-detection:
+    phase: inception
+    auto_proceed: true
+    criteria:
+      - id: WD-1
+        description: "aidlc-state.md exists with project type set"
+        check: "file_exists: aidlc-docs/aidlc-state.md"
+      - id: WD-2
+        description: "Project type identified (greenfield/brownfield)"
+        check: "field_not_empty: project.type"
+
+  reverse-engineering:
+    phase: inception
+    auto_proceed: false
+    skip_conditions:
+      - "project.type == greenfield"
+    criteria:
+      - id: RE-1
+        description: "business-overview.md exists and is non-empty"
+        check: "file_non_empty: inception/reverse-engineering/business-overview.md"
+      - id: RE-2
+        description: "architecture.md exists and is non-empty"
+        check: "file_non_empty: inception/reverse-engineering/architecture.md"
+      - id: RE-3
+        description: "code-structure.md exists and is non-empty"
+        check: "file_non_empty: inception/reverse-engineering/code-structure.md"
+      - id: RE-4
+        description: "api-documentation.md exists and is non-empty"
+        check: "file_non_empty: inception/reverse-engineering/api-documentation.md"
+      - id: RE-5
+        description: "component-inventory.md exists and is non-empty"
+        check: "file_non_empty: inception/reverse-engineering/component-inventory.md"
+      - id: RE-6
+        description: "technology-stack.md exists and is non-empty"
+        check: "file_non_empty: inception/reverse-engineering/technology-stack.md"
+      - id: RE-7
+        description: "dependencies.md exists and is non-empty"
+        check: "file_non_empty: inception/reverse-engineering/dependencies.md"
+      - id: RE-8
+        description: "code-quality-assessment.md exists and is non-empty"
+        check: "file_non_empty: inception/reverse-engineering/code-quality-assessment.md"
+      - id: RE-9
+        description: "reverse-engineering-summary.md exists and is non-empty"
+        check: "file_non_empty: inception/reverse-engineering/reverse-engineering-summary.md"
+
+  requirements-analysis:
+    phase: inception
+    auto_proceed: false
+    criteria:
+      - id: RA-1
+        description: "requirements.md exists and is non-empty"
+        check: "file_non_empty: inception/requirements.md"
+      - id: RA-2
+        description: "All questions answered (no empty [Answer]: tags)"
+        check: "no_empty_answers: inception/requirements-questions.md"
+      - id: RA-3
+        description: "Requirements have unique identifiers"
+        check: "pattern_exists: inception/requirements.md:^(FR|NFR)-\\d+"
+
+  user-stories:
+    phase: inception
+    auto_proceed: false
+    skip_conditions:
+      - "scope == refactoring"
+      - "scope == bug-fix"
+      - "scope == infrastructure-only"
+    criteria:
+      - id: US-1
+        description: "stories.md exists with Given/When/Then acceptance criteria"
+        check: "pattern_exists: inception/stories.md:Given.*When.*Then"
+      - id: US-2
+        description: "Each story maps to at least one requirement"
+        check: "cross_reference: inception/stories.md -> inception/requirements.md"
+
+  workflow-planning:
+    phase: inception
+    auto_proceed: false
+    criteria:
+      - id: WP-1
+        description: "execution-plan.md exists"
+        check: "file_exists: inception/plans/execution-plan.md"
+      - id: WP-2
+        description: "Each stage has EXECUTE or SKIP with rationale"
+        check: "pattern_exists: inception/plans/execution-plan.md:(EXECUTE|SKIP)"
+
+  application-design:
+    phase: inception
+    auto_proceed: false
+    skip_conditions:
+      - "no_new_components"
+    criteria:
+      - id: AD-1
+        description: "components.md exists"
+        check: "file_exists: inception/application-design/components.md"
+      - id: AD-2
+        description: "services.md exists"
+        check: "file_exists: inception/application-design/services.md"
+
+  nfr-requirements:
+    phase: solutioning
+    auto_proceed: false
+    skip_conditions:
+      - "scope == simple"
+      - "no_production_deployment"
+    criteria:
+      - id: NR-1
+        description: "nfr-requirements.md exists"
+        check: "file_non_empty: solutioning/nfr-requirements.md"
+      - id: NR-2
+        description: "Performance targets are quantified (with numbers)"
+        check: "pattern_exists: solutioning/nfr-requirements.md:\\d+\\s*(ms|seconds|req/s|%)"
+      - id: NR-3
+        description: "Security requirements reference standards"
+        check: "pattern_exists: solutioning/nfr-requirements.md:(OWASP|CWE|NIST|ISO)"
+
+  nfr-design:
+    phase: solutioning
+    auto_proceed: false
+    skip_conditions:
+      - "nfr-requirements == skipped"
+    criteria:
+      - id: ND-1
+        description: "nfr-design.md exists"
+        check: "file_non_empty: solutioning/nfr-design.md"
+      - id: ND-2
+        description: "Each NFR has a technical solution mapped"
+        check: "cross_reference: solutioning/nfr-design.md -> solutioning/nfr-requirements.md"
+
+  infrastructure-design:
+    phase: solutioning
+    auto_proceed: false
+    skip_conditions:
+      - "no_infrastructure_changes"
+    criteria:
+      - id: ID-1
+        description: "infrastructure-design.md exists"
+        check: "file_non_empty: solutioning/infrastructure-design.md"
+      - id: ID-2
+        description: "Service topology is defined"
+        check: "section_exists: solutioning/infrastructure-design.md:Service Topology"
+      - id: ID-3
+        description: "Environment matrix is specified"
+        check: "section_exists: solutioning/infrastructure-design.md:Environment Matrix"
+
+  code-generation:
+    phase: construction
+    auto_proceed: false
+    criteria:
+      - id: CG-1
+        description: "All story tasks marked complete"
+        check: "no_unchecked: implementation/{{story_file}}:- \\[ \\]"
+      - id: CG-2
+        description: "All tests pass"
+        check: "test_execution: pass"
+      - id: CG-3
+        description: "Dev Agent Record filled"
+        check: "section_non_empty: implementation/{{story_file}}:Dev Agent Record"
+      - id: CG-4
+        description: "File List complete"
+        check: "section_non_empty: implementation/{{story_file}}:File List"
+
+  test-execution:
+    phase: testing
+    auto_proceed: false
+    criteria:
+      - id: TE-1
+        description: "Test report generated"
+        check: "file_exists: testing/test-report.md"
+      - id: TE-2
+        description: "All test bugs categorized"
+        check: "section_exists: testing/test-report.md:Failure Analysis"
+      - id: TE-3
+        description: "Code bugs flagged for resolution"
+        check: "section_exists: testing/test-report.md:Code Defects"

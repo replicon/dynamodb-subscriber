@@ -1,0 +1,37 @@
+name: nfr-design
+description: "Map NFR requirements to technical solutions and implementation patterns"
+author: "D-AIDLC"
+
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+planning_artifacts: "{config_source}:planning_artifacts"
+date: system-generated
+
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/workflows/3-solutioning/nfr-design"
+instructions: "{installed_path}/instructions.xml"
+validation: "{installed_path}/checklist.md"
+template: "{installed_path}/templates/nfr-design-template.md"
+
+input_file_patterns:
+  nfr_requirements:
+    description: "NFR requirements to design for"
+    whole: "{planning_artifacts}/*nfr-requirements*.md"
+    load_strategy: "FULL_LOAD"
+  architecture:
+    description: "Architecture decisions for alignment"
+    whole: "{planning_artifacts}/*architecture*.md"
+    load_strategy: "FULL_LOAD"
+
+default_output_file: "{planning_artifacts}/nfr-design.md"
+
+tags:
+  - solutioning
+  - nfr
+  - design
+
+execution_hints:
+  interactive: true
+  autonomous: false
+  iterative: true

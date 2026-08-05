@@ -1,0 +1,96 @@
+<workflow>
+  <critical>Communicate all responses in {communication_language}</critical>
+  <critical>Generate all documents in {document_output_language}</critical>
+  <critical>Every NFR requirement MUST have a corresponding technical solution</critical>
+
+  <step n="1" goal="Load NFR requirements and architecture context">
+    <action>Load NFR requirements: {planning_artifacts}/*nfr-requirements*.md</action>
+    <action>Load architecture document: {planning_artifacts}/*architecture*.md</action>
+    <action>Create a mapping table: NFR ID -> Technical Solution (initially empty)</action>
+    <output>Loaded {{nfr_count}} NFR requirements across {{category_count}} categories.</output>
+  </step>
+
+  <step n="2" goal="Design Performance Solutions">
+    <action>For each NFR-PERF requirement, design the technical solution:
+      - Caching strategy (what to cache, TTL, invalidation)
+      - Connection pooling configuration
+      - Query optimization approach
+      - CDN and static asset strategy
+      - Database indexing plan
+      - Async processing for long operations
+      - Response compression
+    </action>
+    <action>Document the solution with specific technology choices and configuration</action>
+  </step>
+
+  <step n="3" goal="Design Security Solutions">
+    <action>For each NFR-SEC requirement, design the technical solution:
+      - Authentication implementation (JWT, OAuth2, session-based)
+      - Authorization middleware and policy engine
+      - Input validation middleware and sanitization libraries
+      - Encryption implementation (TLS config, field-level encryption)
+      - Rate limiting configuration
+      - CORS policy
+      - Security headers (CSP, HSTS, X-Frame-Options)
+      - Secrets management solution (vault, env vars, cloud KMS)
+    </action>
+    <action>Map each solution to specific OWASP mitigations</action>
+  </step>
+
+  <step n="4" goal="Design Scalability Solutions">
+    <action>For each NFR-SCALE requirement, design the technical solution:
+      - Auto-scaling configuration (triggers, cooldown, min/max)
+      - Load balancer configuration
+      - Database read replicas or sharding strategy
+      - Cache clustering
+      - Message queue partitioning
+      - Stateless application design patterns
+    </action>
+  </step>
+
+  <step n="5" goal="Design Reliability Solutions">
+    <action>For each NFR-REL requirement, design the technical solution:
+      - Health check endpoints and probes
+      - Circuit breaker configuration (thresholds, recovery)
+      - Retry policies (exponential backoff, jitter)
+      - Backup strategy and automation
+      - Failover mechanism
+      - Graceful degradation patterns
+      - Dead letter queues for failed processing
+    </action>
+  </step>
+
+  <step n="6" goal="Design Observability Solutions">
+    <action>For each NFR-OBS requirement, design the technical solution:
+      - Logging framework and format (winston, pino, structlog)
+      - Metrics collection (Prometheus, DataDog, CloudWatch)
+      - Distributed tracing (OpenTelemetry, Jaeger)
+      - Alerting rules and notification channels
+      - Dashboard specifications
+      - Error tracking (Sentry, Bugsnag)
+    </action>
+  </step>
+
+  <step n="7" goal="Compile NFR Design Document">
+    <action>Compile all solutions into the template</action>
+    <action>Verify every NFR requirement has a solution mapped</action>
+    <action>Add implementation priority order</action>
+    <action>Run content validation</action>
+    <action>Write to: {default_output_file}</action>
+
+    <output>
+      # D-AIDLC: NFR Design Complete
+
+      **Artifacts Created:**
+      - {default_output_file}
+
+      > **REVIEW REQUIRED:** {default_output_file}
+      >
+      > **WHAT'S NEXT?**
+      > 1. Request Changes - I'll revise based on your feedback
+      > 2. Approve and Continue - Proceed to Infrastructure Design
+    </output>
+
+    <action>Log completion to audit trail</action>
+  </step>
+</workflow>

@@ -1,0 +1,43 @@
+module,phase,name,code,command,agent,description
+core,anytime,Help,HELP,daidlc-help,daidlc-master,Context-aware guidance on what to do next
+core,anytime,Status,STATUS,daidlc-status,daidlc-master,Show current D-AIDLC project status
+daidlc,0-brownfield,Reverse Engineering,RE,daidlc-reverse-engineering,analyst,Deep analysis of existing codebase (9 artifacts)
+daidlc,1-analysis,Brainstorm,BS,daidlc-brainstorm,analyst,Guided ideation and exploration session
+daidlc,1-analysis,Market Research,MR,daidlc-market-research,analyst,Competitive landscape and market analysis
+daidlc,1-analysis,Domain Research,DR,daidlc-domain-research,analyst,Industry domain deep dive
+daidlc,1-analysis,Technical Research,TR,daidlc-tech-research,analyst,Feasibility and architecture options
+daidlc,1-analysis,Create Brief,CB,daidlc-create-brief,analyst,Executive product brief
+daidlc,2-planning,Create PRD,CP,daidlc-create-prd,pm,Product Requirements Document creation
+daidlc,2-planning,Validate PRD,VP,daidlc-validate-prd,pm,Quality gate check on PRD
+daidlc,2-planning,Edit PRD,EP,daidlc-edit-prd,pm,Refine and update PRD
+daidlc,2-planning,Create UX Design,UX,daidlc-create-ux-design,ux-designer,User experience specifications
+daidlc,3-solutioning,Create Architecture,CA,daidlc-create-architecture,architect,Technical design with ADRs
+daidlc,3-solutioning,NFR Requirements,NR,daidlc-nfr-requirements,architect,Non-functional requirements analysis
+daidlc,3-solutioning,NFR Design,ND,daidlc-nfr-design,architect,Technical solutions for NFR targets
+daidlc,3-solutioning,Infrastructure Design,ID,daidlc-infrastructure-design,architect,Service topology and deployment mapping
+daidlc,3-solutioning,Create Epics & Stories,CE,daidlc-create-epics,pm,Work breakdown structure
+daidlc,3-solutioning,Implementation Readiness,IR,daidlc-implementation-readiness,pm,Alignment validation check
+daidlc,4-implementation,Sprint Planning,SP,daidlc-sprint-planning,scrum-master,Initialize sprint tracking and status
+daidlc,4-implementation,Create Story,CS,daidlc-create-story,scrum-master,Prepare story for development
+daidlc,4-implementation,Dev Story,DS,daidlc-dev-story,developer,Implement story with tests
+daidlc,4-implementation,Code Review,CR,daidlc-code-review,developer,Adversarial senior developer review
+daidlc,4-implementation,QA Automate,QA,daidlc-qa-automate,qa-engineer,Generate tests for existing features
+daidlc,4-implementation,Retrospective,RT,daidlc-retrospective,scrum-master,Epic retrospective and lessons learned
+daidlc,4-implementation,Correct Course,CC,daidlc-correct-course,scrum-master,Mid-sprint change management
+daidlc,quick-flow,Quick Spec,QS,daidlc-quick-spec,quick-dev,Fast technical specification
+daidlc,quick-flow,Quick Dev,QD,daidlc-quick-dev,quick-dev,Rapid implementation from spec
+ate,testing,Test Strategy,TS,daidlc-test-strategy,test-architect,Define testing approach and coverage targets
+ate,testing,Generate Tests,GT,daidlc-generate-tests,test-architect,Create unit integration and E2E tests
+ate,testing,Execute Tests,ET,daidlc-execute-tests,test-architect,Run test suite and capture results
+ate,testing,Analyze Results,AR,daidlc-analyze-results,test-architect,AI-powered test failure analysis
+ate,testing,Coverage Report,COV,daidlc-coverage-report,test-architect,Test coverage analysis and gaps
+ate,testing,Regression Detection,RD,daidlc-regression-detection,test-architect,Compare test results across runs
+gov,governance,Audit Trail,AU,daidlc-audit,governance-officer,View and manage the audit trail
+gov,governance,Validate Gate,VG,daidlc-validate-gate,governance-officer,Check stage completion criteria
+gov,governance,Content Validation,CV,daidlc-content-validation,governance-officer,Validate artifact quality
+std,compliance,Security Review,SR,daidlc-security-review,compliance-officer,OWASP-based security analysis
+std,compliance,Compliance Check,CCK,daidlc-compliance-check,compliance-officer,Regulatory compliance validation
+std,compliance,Tech Stack Validation,TV,daidlc-tech-stack-validation,compliance-officer,Verify against approved technologies
+daidlc,documentation,Write Document,WD,daidlc-write-document,tech-writer,Create structured documentation
+daidlc,documentation,Mermaid Generate,MG,daidlc-mermaid-generate,tech-writer,Create Mermaid diagrams
+daidlc,documentation,Validate Document,VD,daidlc-validate-document,tech-writer,Check document quality and completeness

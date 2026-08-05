@@ -1,0 +1,42 @@
+name: nfr-requirements
+description: "Analyze and document Non-Functional Requirements with measurable targets"
+author: "D-AIDLC"
+
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+user_skill_level: "{config_source}:user_skill_level"
+planning_artifacts: "{config_source}:planning_artifacts"
+date: system-generated
+
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/workflows/3-solutioning/nfr-requirements"
+instructions: "{installed_path}/instructions.xml"
+validation: "{installed_path}/checklist.md"
+template: "{installed_path}/templates/nfr-requirements-template.md"
+
+input_file_patterns:
+  requirements:
+    description: "Product requirements document"
+    whole: "{planning_artifacts}/*requirements*.md"
+    load_strategy: "FULL_LOAD"
+  architecture:
+    description: "Architecture decisions"
+    whole: "{planning_artifacts}/*architecture*.md"
+    load_strategy: "FULL_LOAD"
+  prd:
+    description: "PRD for context"
+    whole: "{planning_artifacts}/*prd*.md"
+    load_strategy: "SELECTIVE_LOAD"
+
+default_output_file: "{planning_artifacts}/nfr-requirements.md"
+
+tags:
+  - solutioning
+  - nfr
+  - quality-attributes
+
+execution_hints:
+  interactive: true
+  autonomous: false
+  iterative: true

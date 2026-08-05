@@ -1,0 +1,109 @@
+<workflow>
+  <critical>Communicate all responses in {communication_language}</critical>
+  <critical>NEVER fabricate test results — always run actual commands</critical>
+  <critical>Capture complete stdout and stderr output</critical>
+
+  <step n="1" goal="Detect test runner and configuration">
+    <action>Identify the correct test run command:
+      - Jest: npx jest --verbose --coverage --json --outputFile=test-results.json
+      - Vitest: npx vitest run --reporter=verbose --coverage
+      - Pytest: python -m pytest -v --tb=long --cov --cov-report=json
+      - Mocha: npx mocha --recursive --reporter spec
+      - Go: go test -v -cover ./...
+    </action>
+
+    <action>Check for:
+      - Test configuration files (jest.config, vitest.config, pytest.ini)
+      - Custom test scripts in package.json / Makefile
+      - Required environment variables for testing
+      - Test database setup requirements
+    </action>
+  </step>
+
+  <step n="2" goal="Prepare test environment">
+    <action>Ensure test prerequisites:
+      - Dependencies installed (npm install / pip install)
+      - Test database available (if needed)
+      - Environment variables set
+      - Test fixtures/seed data loaded
+    </action>
+
+    <check if="test database needed">
+      <action>Set up test database or use in-memory alternative</action>
+    </check>
+  </step>
+
+  <step n="3" goal="Execute test suites">
+    <action>Run tests in order:
+      1. Unit tests first (fastest, most likely to pass)
+      2. Integration tests second
+      3. E2E tests last (slowest)
+    </action>
+
+    <action>For each suite:
+      - Execute the test command
+      - Capture complete output (stdout + stderr)
+      - Record execution time
+      - Record pass/fail counts
+      - Save raw output for analysis
+    </action>
+
+    <action>If tests fail:
+      - Do NOT stop — continue running remaining suites
+      - Capture the full failure output including stack traces
+      - Note which tests failed and which passed
+    </action>
+  </step>
+
+  <step n="4" goal="Collect coverage data">
+    <action>Gather coverage reports:
+      - Overall line coverage percentage
+      - Per-file coverage breakdown
+      - Uncovered lines and branches
+      - Coverage comparison vs target from test strategy
+    </action>
+  </step>
+
+  <step n="5" goal="Generate execution report">
+    <action>Create test execution report with:
+
+      ## Execution Summary
+      - Date: {{date}}
+      - Duration: {{total_duration}}
+      - Pass Rate: {{passed}}/{{total}} ({{pass_rate}}%)
+
+      ## Results by Suite
+      | Suite | Tests | Passed | Failed | Skipped | Duration |
+      |-------|-------|--------|--------|---------|----------|
+      {{suite_results_table}}
+
+      ## Failed Tests
+      {{failed_test_details}}
+
+      ## Coverage Summary
+      | Metric | Current | Target | Status |
+      |--------|---------|--------|--------|
+      {{coverage_summary}}
+
+      ## Raw Output
+      [Attached or linked for AI analysis]
+    </action>
+
+    <action>Write to: {default_output_file}</action>
+    <action>Save previous results for regression comparison</action>
+    <action>Log to audit trail</action>
+
+    <output>
+      # D-AIDLC: Test Execution Complete
+
+      **Pass Rate:** {{pass_rate}}%
+      **Coverage:** {{coverage}}%
+      **Failed:** {{failed_count}} tests
+
+      > **WHAT'S NEXT?**
+      > 1. Analyze Results — AI-powered failure analysis
+      > 2. Fix and Re-run — Address failures and execute again
+      > 3. Coverage Report — Deep dive into coverage gaps
+    </output>
+  </step>
+</workflow>

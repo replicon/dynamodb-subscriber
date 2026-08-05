@@ -1,0 +1,87 @@
+code: daidlc
+name: "D-AIDLC: Deltek AI-Driven Development Life Cycle"
+description: "Complete AI-driven development framework with governance, testing, and compliance"
+version: "1.0.0"
+default_selected: true
+
+header: "D-AIDLC Project Configuration"
+subheader: "Configure your development project settings"
+
+project_name:
+  prompt: "What is your project called?"
+  default: "{directory_name}"
+  result: "{value}"
+
+user_skill_level:
+  prompt: "What is your development experience level?"
+  default: "intermediate"
+  result: "{value}"
+  single-select:
+    - value: "beginner"
+      label: "Beginner - Detailed explanations and guidance"
+    - value: "intermediate"
+      label: "Intermediate - Balanced detail and speed"
+    - value: "expert"
+      label: "Expert - Direct and technical"
+
+project_type:
+  prompt: "Is this a new project or extending an existing codebase?"
+  default: "greenfield"
+  result: "{value}"
+  single-select:
+    - value: "greenfield"
+      label: "Greenfield - Starting from scratch"
+    - value: "brownfield"
+      label: "Brownfield - Extending existing code"
+
+governance_enabled:
+  prompt: "Enable governance layer (audit trail, stage gates, content validation)?"
+  default: "true"
+  result: "{value}"
+  single-select:
+    - value: "true"
+      label: "Yes - Full audit trail and stage validation (Recommended)"
+    - value: "false"
+      label: "No - Lightweight mode without governance"
+
+compliance_enabled:
+  prompt: "Enable compliance module (security standards, regulatory checks)?"
+  default: "false"
+  result: "{value}"
+  single-select:
+    - value: "true"
+      label: "Yes - OWASP, GDPR, SOC2, HIPAA checks"
+    - value: "false"
+      label: "No - Skip compliance checks"
+
+planning_artifacts:
+  prompt: "Where should planning artifacts (PRD, architecture, epics) be stored?"
+  default: "{output_folder}/inception"
+  result: "C:\Workspaces\dynamodb-subscriber/{value}"
+
+implementation_artifacts:
+  prompt: "Where should implementation artifacts (stories, sprints, reviews) be stored?"
+  default: "{output_folder}/construction"
+  result: "C:\Workspaces\dynamodb-subscriber/{value}"
+
+test_artifacts:
+  prompt: "Where should test artifacts (strategies, reports, coverage) be stored?"
+  default: "{output_folder}/testing"
+  result: "C:\Workspaces\dynamodb-subscriber/{value}"
+
+project_knowledge:
+  prompt: "Where should long-term project knowledge be stored?"
+  default: "docs"
+  result: "C:\Workspaces\dynamodb-subscriber/{value}"
+
+directories:
+  - "{planning_artifacts}"
+  - "{planning_artifacts}/plans"
+  - "{planning_artifacts}/reverse-engineering"
+  - "{planning_artifacts}/application-design"
+  - "{implementation_artifacts}"
+  - "{implementation_artifacts}/plans"
+  - "{test_artifacts}"
+  - "{project_knowledge}"
+  - "{output_folder}/audit"
+  - "{output_folder}/governance"

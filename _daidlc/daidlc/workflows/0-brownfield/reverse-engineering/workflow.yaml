@@ -1,0 +1,39 @@
+name: reverse-engineering
+description: "Deep analysis of existing codebase producing 9 structured artifacts"
+author: "D-AIDLC"
+
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+planning_artifacts: "{config_source}:planning_artifacts"
+date: system-generated
+
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/workflows/0-brownfield/reverse-engineering"
+instructions: "{installed_path}/instructions.xml"
+validation: "{installed_path}/checklist.md"
+
+# Analysis technique library and project type detection
+techniques_csv: "{installed_path}/re-techniques.csv"
+project_types_csv: "{installed_path}/re-project-types.csv"
+
+re_output: "{planning_artifacts}/reverse-engineering"
+
+default_output_file: "{re_output}/reverse-engineering-summary.md"
+
+required_tools:
+  - read_file
+  - write_file
+  - glob
+  - grep
+  - list_files
+
+tags:
+  - brownfield
+  - analysis
+  - reverse-engineering
+
+execution_hints:
+  interactive: false
+  autonomous: true
+  iterative: true

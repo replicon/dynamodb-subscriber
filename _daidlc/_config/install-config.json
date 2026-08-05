@@ -1,0 +1,11 @@
+{
+  "installed": "2026-08-04T08:16:20.029Z",
+  "version": "1.0.0",
+  "user": "Developer",
+  "project": "dynamodb-subscriber",
+  "ide": "claude",
+  "ide_label": "Claude Code",
+  "commands_dir": ".claude/commands",
+  "target": "C:\\Workspaces\\dynamodb-subscriber",
+  "source": "C:\\Workspaces\\D-AIDLC-V20\\d-aidlc\\src"
+}

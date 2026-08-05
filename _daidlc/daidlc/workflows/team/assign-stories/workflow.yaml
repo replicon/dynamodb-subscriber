@@ -1,0 +1,58 @@
+name: assign-stories
+description: "Assign sprint stories to team members based on capacity, skills, and dependency constraints for teams of 10-40"
+author: "D-AIDLC"
+
+# Critical variables from config
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+implementation_artifacts: "{config_source}:implementation_artifacts"
+
+# Workflow components
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/daidlc/workflows/team/assign-stories"
+instructions: "{installed_path}/instructions.md"
+
+# Variables and inputs
+project_context: "**/project-context.md"
+project_name: "{config_source}:project_name"
+
+# Input files
+team_dir: "C:\Workspaces\dynamodb-subscriber/aidlc-docs/team"
+roster_file: "{team_dir}/team-roster.yaml"
+sprint_status_file: "{implementation_artifacts}/sprint-status.yaml"
+assignments_file: "{team_dir}/sprint-assignments.yaml"
+
+# Smart input file references
+input_file_patterns:
+  roster:
+    description: "Team roster with members, roles, and capacity"
+    whole: "{team_dir}/team-roster.yaml"
+    load_strategy: "FULL_LOAD"
+  sprint_status:
+    description: "Current sprint status with all stories"
+    whole: "{implementation_artifacts}/sprint-status.yaml"
+    load_strategy: "FULL_LOAD"
+  existing_assignments:
+    description: "Existing sprint assignments if any"
+    whole: "{team_dir}/sprint-assignments.yaml"
+    load_strategy: "FULL_LOAD"
+  epics:
+    description: "Epic files for story context and dependencies"
+    whole: "{config_source}:planning_artifacts/*epic*.md"
+    load_strategy: "SELECTIVE_LOAD"
+
+# Output configuration
+default_output_file: "{assignments_file}"
+
+tags:
+  - team
+  - assignment
+  - sprint
+  - scrum-master
+
+execution_hints:
+  interactive: true
+  autonomous: false
+  iterative: true

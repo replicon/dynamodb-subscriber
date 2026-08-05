@@ -1,0 +1,50 @@
+project:
+  name: "{project_name}"
+  type: "{project_type}"
+  workspace_root: "C:\Workspaces\dynamodb-subscriber"
+  governance_enabled: true
+  compliance_enabled: false
+  created: "{date}"
+  last_updated: "{date}"
+
+current_stage: "workspace-detection"
+current_phase: "inception"
+
+inception:
+  workspace_detection: "pending"
+  reverse_engineering: "pending"
+  requirements_analysis: "pending"
+  user_stories: "pending"
+  workflow_planning: "pending"
+  application_design: "pending"
+  nfr_requirements: "pending"
+  nfr_design: "pending"
+  infrastructure_design: "pending"
+  units_generation: "pending"
+
+team:
+  team_setup: "pending"
+  story_assignment: "pending"
+
+construction:
+  sprint_planning: "pending"
+  units: []
+  build_and_test: "pending"
+
+testing:
+  test_strategy: "pending"
+  test_generation: "pending"
+  test_execution: "pending"
+  coverage_report: "pending"
+  regression_detection: "pending"
+
+governance:
+  audit_entries: 0
+  stage_gates_passed: 0
+  questions_files_created: 0
+  validations_run: 0
+
+compliance:
+  security_review: "pending"
+  compliance_check: "pending"
+  tech_stack_validation: "pending"

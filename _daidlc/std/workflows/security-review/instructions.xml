@@ -1,0 +1,123 @@
+<workflow>
+  <critical>Communicate all responses in {communication_language}</critical>
+  <critical>Generate all documents in {document_output_language}</critical>
+  <critical>Every finding MUST include file path, line number, and remediation</critical>
+
+  <step n="1" goal="Scan codebase for OWASP Top 10 vulnerabilities">
+    <action>For each OWASP 2021 category, scan the codebase:
+
+      **A01: Broken Access Control**
+      - Check for missing auth middleware on protected routes
+      - Check for direct object reference without authorization
+      - Check for privilege escalation paths
+      - Check for CORS misconfiguration
+
+      **A02: Cryptographic Failures**
+      - Check for hardcoded secrets, API keys, passwords
+      - Check for weak encryption algorithms
+      - Check for unencrypted sensitive data storage
+      - Check for missing TLS configuration
+
+      **A03: Injection**
+      - Check for SQL query concatenation (not parameterized)
+      - Check for unsanitized user input in commands
+      - Check for template injection
+      - Check for LDAP injection
+
+      **A04: Insecure Design**
+      - Check for missing rate limiting
+      - Check for missing input validation
+      - Check for business logic flaws
+
+      **A05: Security Misconfiguration**
+      - Check for default credentials
+      - Check for verbose error messages in production
+      - Check for unnecessary features enabled
+      - Check for missing security headers
+
+      **A06: Vulnerable Components**
+      - Check for known CVEs in dependencies
+      - Check for outdated packages
+      - Check for abandoned dependencies
+
+      **A07: Authentication Failures**
+      - Check for weak password policies
+      - Check for missing brute force protection
+      - Check for session management issues
+      - Check for missing MFA implementation
+
+      **A08: Software and Data Integrity**
+      - Check for unsigned or unverified updates
+      - Check for insecure deserialization
+      - Check for CI/CD pipeline security
+
+      **A09: Logging Failures**
+      - Check for missing security event logging
+      - Check for sensitive data in logs
+      - Check for missing audit trail
+
+      **A10: SSRF**
+      - Check for unvalidated URL fetching
+      - Check for internal service exposure
+    </action>
+  </step>
+
+  <step n="2" goal="Assess dependency vulnerabilities">
+    <check if="security_scan_level != 'basic'">
+      <action>Analyze dependency files:
+        - npm audit / pip-audit / safety check
+        - Check for known CVEs in package versions
+        - Identify critical and high severity issues
+        - Check for packages with no maintenance
+      </action>
+    </check>
+  </step>
+
+  <step n="3" goal="Threat modeling (deep scan only)">
+    <check if="security_scan_level == 'deep'">
+      <action>Perform STRIDE threat modeling:
+        - Spoofing: authentication threats
+        - Tampering: data integrity threats
+        - Repudiation: logging and audit threats
+        - Information Disclosure: data exposure threats
+        - Denial of Service: availability threats
+        - Elevation of Privilege: authorization threats
+      </action>
+    </check>
+  </step>
+
+  <step n="4" goal="Generate security review report">
+    <action>Create report with:
+
+      ## Security Review Summary
+      - Scan level: {{security_scan_level}}
+      - Files scanned: {{files_scanned}}
+      - Critical findings: {{critical_count}}
+      - High findings: {{high_count}}
+      - Medium findings: {{medium_count}}
+      - Low findings: {{low_count}}
+
+      ## Findings by OWASP Category
+      For each finding:
+      - OWASP Category
+      - Severity (Critical/High/Medium/Low)
+      - File path and line number
+      - Description of the vulnerability
+      - Remediation steps (specific code changes)
+      - References (CWE, OWASP links)
+    </action>
+
+    <action>Write to: {default_output_file}</action>
+    <action>Log to audit trail</action>
+
+    <output>
+      # D-AIDLC: Security Review Complete
+
+      **Findings:** {{critical_count}} Critical, {{high_count}} High, {{medium_count}} Medium, {{low_count}} Low
+
+      > **REVIEW REQUIRED:** {default_output_file}
+      >
+      > Critical and High findings must be addressed before deployment.
+    </output>
+  </step>
+</workflow>

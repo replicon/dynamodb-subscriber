@@ -1,0 +1,144 @@
+<workflow>
+  <critical>Communicate all responses in {communication_language}</critical>
+  <critical>Generate all documents in {document_output_language}</critical>
+
+  <step n="1" goal="Determine current stage and load validation criteria">
+    <action>Load the state file: {state_file}</action>
+    <action>Identify current_stage and current_phase</action>
+    <action>Load the stage-gate rules for the current stage</action>
+
+    <stage-gates>
+      <gate stage="workspace-detection">
+        <criteria>aidlc-state.md exists and project type is set</criteria>
+        <criteria>Workspace scan results documented</criteria>
+        <auto-proceed>true</auto-proceed>
+      </gate>
+
+      <gate stage="reverse-engineering">
+        <criteria>All 9 reverse engineering artifacts exist</criteria>
+        <criteria>business-overview.md is complete</criteria>
+        <criteria>architecture.md is complete</criteria>
+        <criteria>code-structure.md is complete</criteria>
+        <criteria>api-documentation.md is complete</criteria>
+        <criteria>component-inventory.md is complete</criteria>
+        <criteria>technology-stack.md is complete</criteria>
+        <criteria>dependencies.md is complete</criteria>
+        <criteria>code-quality-assessment.md is complete</criteria>
+        <criteria>reverse-engineering-summary.md is complete</criteria>
+        <approval-required>true</approval-required>
+      </gate>
+
+      <gate stage="requirements-analysis">
+        <criteria>requirements.md exists and is non-empty</criteria>
+        <criteria>All questions in requirements-questions.md are answered (no empty [Answer]: tags)</criteria>
+        <criteria>Requirements have unique IDs</criteria>
+        <criteria>Each requirement is traceable to user value</criteria>
+        <approval-required>true</approval-required>
+      </gate>
+
+      <gate stage="user-stories">
+        <criteria>stories.md exists with user stories in Given/When/Then format</criteria>
+        <criteria>personas.md exists if multiple user types identified</criteria>
+        <criteria>Each story maps to at least one requirement</criteria>
+        <approval-required>true</approval-required>
+      </gate>
+
+      <gate stage="workflow-planning">
+        <criteria>execution-plan.md exists</criteria>
+        <criteria>Each stage shows EXECUTE or SKIP with rationale</criteria>
+        <approval-required>true</approval-required>
+      </gate>
+
+      <gate stage="application-design">
+        <criteria>components.md exists</criteria>
+        <criteria>services.md exists</criteria>
+        <criteria>Component dependency diagram is valid</criteria>
+        <approval-required>true</approval-required>
+      </gate>
+
+      <gate stage="nfr-requirements">
+        <criteria>nfr-requirements.md exists</criteria>
+        <criteria>Performance targets are quantified</criteria>
+        <criteria>Security requirements reference standards</criteria>
+        <approval-required>true</approval-required>
+      </gate>
+
+      <gate stage="nfr-design">
+        <criteria>nfr-design.md exists</criteria>
+        <criteria>Each NFR requirement has a technical solution mapped</criteria>
+        <approval-required>true</approval-required>
+      </gate>
+
+      <gate stage="infrastructure-design">
+        <criteria>infrastructure-design.md exists</criteria>
+        <criteria>Service topology is defined</criteria>
+        <criteria>Environment matrix is specified</criteria>
+        <approval-required>true</approval-required>
+      </gate>
+
+      <gate stage="code-generation">
+        <criteria>All story tasks are marked complete</criteria>
+        <criteria>All tests pass</criteria>
+        <criteria>Dev Agent Record is filled in story file</criteria>
+        <criteria>File List is complete in story file</criteria>
+        <approval-required>true</approval-required>
+      </gate>
+
+      <gate stage="test-execution">
+        <criteria>All generated tests execute without environment errors</criteria>
+        <criteria>Test report is generated with pass/fail breakdown</criteria>
+        <criteria>Code bugs are flagged and tracked</criteria>
+        <approval-required>true</approval-required>
+      </gate>
+    </stage-gates>
+
+    <output>Current stage: {{current_stage}} ({{current_phase}} phase)</output>
+  </step>
+
+  <step n="2" goal="Validate each criteria for the current stage">
+    <action>For each criteria in the current stage gate:</action>
+    <action>  - Check if the criteria is met</action>
+    <action>  - Record PASS or FAIL with evidence</action>
+
+    <output>
+      ## Stage Gate Validation: {{current_stage}}
+
+      | # | Criteria | Status | Evidence |
+      |---|----------|--------|----------|
+      {{validation_results}}
+
+      **Result: {{pass_count}}/{{total_count}} criteria met**
+    </output>
+  </step>
+
+  <step n="3" goal="Present gate decision">
+    <check if="all criteria pass">
+      <output>
+        **STAGE GATE: PASSED**
+
+        All {{total_count}} criteria met. Ready to proceed.
+
+        > **WHAT'S NEXT?**
+        > 1. Approve and Continue to {{next_stage}}
+        > 2. Review artifacts before approving
+      </output>
+    </check>
+
+    <check if="some criteria fail">
+      <output>
+        **STAGE GATE: NOT PASSED**
+
+        {{pass_count}}/{{total_count}} criteria met. Issues found:
+
+        {{failing_criteria}}
+
+        > **OPTIONS:**
+        > 1. Fix issues and re-validate
+        > 2. Override gate (will be logged in audit trail)
+        > 3. Go back to {{current_stage}} to address gaps
+      </output>
+    </check>
+
+    <action>Log validation result to audit trail</action>
+  </step>
+</workflow>

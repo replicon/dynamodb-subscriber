@@ -1,0 +1,119 @@
+<workflow>
+  <critical>Communicate all responses in {communication_language}</critical>
+  <critical>Generate all documents in {document_output_language}</critical>
+  <critical>All generated tests MUST use the project's existing test framework</critical>
+  <critical>Never use custom test utilities — use standard framework APIs only</critical>
+
+  <step n="1" goal="Load context and detect test framework">
+    <action>Load test strategy: {test_artifacts}/*test-strategy*.md</action>
+    <action>Load project context: **/project-context.md</action>
+
+    <check if="test_framework == 'auto-detect'">
+      <action>Scan project for test framework:
+        - Check package.json for jest, vitest, mocha, jasmine
+        - Check requirements.txt/pyproject.toml for pytest, unittest
+        - Check existing test files for import patterns
+        - Check test configuration files (jest.config, vitest.config, pytest.ini)
+      </action>
+    </check>
+
+    <action>Identify:
+      - Test directory structure (tests/, __tests__/, *.test.*, *.spec.*)
+      - Existing test patterns and style
+      - Available test utilities and helpers
+      - Mock/stub patterns used
+    </action>
+
+    <output>Test framework: {{framework}}, Pattern: {{test_pattern}}</output>
+  </step>
+
+  <step n="2" goal="Identify target code for testing">
+    <action>Ask user or auto-discover:
+      - Specific files/modules to test
+      - Story acceptance criteria to cover
+      - Or: full project scan for untested code
+    </action>
+
+    <action>For each target file:
+      - Read the complete source code
+      - Identify all exported functions/classes/components
+      - Map dependencies and imports
+      - Identify edge cases and error paths
+    </action>
+  </step>
+
+  <step n="3" goal="Generate Unit Tests">
+    <action>For each target function/method/component:
+      1. Create test file following project naming convention
+      2. Write test setup (imports, mocks, fixtures)
+      3. Generate tests for:
+         - Happy path (expected inputs → expected outputs)
+         - Edge cases (empty, null, boundary values)
+         - Error paths (invalid inputs, thrown exceptions)
+         - Type validation (if applicable)
+      4. Use descriptive test names that explain the behavior
+      5. One logical assertion per test
+      6. Mock external dependencies, test the unit in isolation
+    </action>
+
+    <action>Follow framework-specific patterns:
+      - Jest: describe/it blocks, expect().toBe/toEqual
+      - Vitest: same as Jest API
+      - Pytest: test_ functions, assert statements, fixtures
+      - Playwright: test() blocks, expect() locators
+    </action>
+  </step>
+
+  <step n="4" goal="Generate Integration Tests">
+    <action>For API endpoints and service interactions:
+      1. Create integration test files
+      2. Test API request/response contracts:
+         - Status codes (200, 201, 400, 404, 500)
+         - Response body structure and types
+         - Authentication/authorization enforcement
+         - Input validation error messages
+      3. Test service-to-service interactions
+      4. Test database operations (CRUD with assertions)
+      5. Use test database or in-memory alternatives
+    </action>
+  </step>
+
+  <step n="5" goal="Generate E2E Tests (if applicable)">
+    <check if="e2e_framework != 'none'">
+      <action>For critical user journeys:
+        1. Create E2E test files
+        2. Test complete user workflows:
+           - User registration/login flow
+           - Primary feature workflows
+           - Error recovery flows
+        3. Use semantic locators (role, label, test-id)
+        4. Add proper waits (waitForSelector, not sleep)
+        5. Keep E2E tests focused on critical paths only
+      </action>
+    </check>
+  </step>
+
+  <step n="6" goal="Validate and report">
+    <action>Create test generation report:
+      - Files created (with paths)
+      - Test count by type (unit/integration/E2E)
+      - Estimated coverage improvement
+      - Any skipped areas with rationale
+    </action>
+    <action>Write report to: {default_output_file}</action>
+    <action>Log completion to audit trail</action>
+
+    <output>
+      # D-AIDLC: Test Generation Complete
+
+      **Tests Generated:**
+      - Unit: {{unit_count}} tests in {{unit_files}} files
+      - Integration: {{integration_count}} tests in {{integration_files}} files
+      - E2E: {{e2e_count}} tests in {{e2e_files}} files
+
+      > **WHAT'S NEXT?**
+      > 1. Review generated tests
+      > 2. Execute Tests — Run the suite and analyze results
+    </output>
+  </step>
+</workflow>

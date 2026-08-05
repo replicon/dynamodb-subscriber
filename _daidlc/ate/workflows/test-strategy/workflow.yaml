@@ -1,0 +1,42 @@
+name: test-strategy
+description: "Define comprehensive test strategy with coverage targets, framework selection, and test pyramid"
+author: "D-AIDLC"
+
+config_source: "C:\Workspaces\dynamodb-subscriber\_daidlc/ate/module.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+test_artifacts: "{config_source}:test_artifacts"
+coverage_target: "{config_source}:coverage_target"
+date: system-generated
+
+installed_path: "C:\Workspaces\dynamodb-subscriber\_daidlc/ate/workflows/test-strategy"
+instructions: "{installed_path}/instructions.xml"
+validation: "{installed_path}/checklist.md"
+template: "{installed_path}/templates/test-strategy-template.md"
+
+input_file_patterns:
+  architecture:
+    description: "Architecture for understanding system structure"
+    whole: "**/*architecture*.md"
+    load_strategy: "SELECTIVE_LOAD"
+  nfr:
+    description: "NFR requirements for quality targets"
+    whole: "**/*nfr-requirements*.md"
+    load_strategy: "SELECTIVE_LOAD"
+  project_context:
+    description: "Project conventions"
+    whole: "**/project-context.md"
+    load_strategy: "FULL_LOAD"
+
+default_output_file: "{test_artifacts}/test-strategy.md"
+
+tags:
+  - testing
+  - strategy
+  - planning
+
+execution_hints:
+  interactive: true
+  autonomous: false
+  iterative: false
