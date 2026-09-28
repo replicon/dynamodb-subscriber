@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Grep",
+      "Glob",
+      "Bash(npm test)",
+      "Bash(npx mocha*)",
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(gh pr diff*)",
+      "Bash(graphify query*)",
+      "Bash(graphify explain*)",
+      "Bash(graphify path*)",
+      "Bash(graphify affected*)",
+      "Bash(graphify god-nodes*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Read",
+        "hooks": [{"type": "command", "command": "sh \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/run-hook.sh\" \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/graphify-guard.py\"", "timeout": 5}]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [{"type": "command", "command": "sh \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/run-hook.sh\" \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/graphify-guard.py\" --post", "timeout": 5}]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [{"type": "command", "command": "sh \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/run-hook.sh\" \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/graphify-stop-hook.py\"", "timeout": 10}]
+      }
+    ]
+  }
+}

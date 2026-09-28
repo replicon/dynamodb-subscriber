@@ -1,0 +1,26 @@
+# graphifyignore — patterns excluded from graphify AST graph extraction
+# Syntax: same as .gitignore (glob patterns, one per line)
+#
+# This repo indexes the AST layer only. The whole library is index.js plus the
+# mocha suite under test/ — everything below is tooling, docs, or generated
+# output that would add nodes without adding navigational value.
+
+# Dependencies and package manager artefacts
+node_modules/
+package-lock.json
+
+# CI/CD and agent tooling config — not application source
+.github/
+.claude/
+
+# D-AIDLC framework definitions and generated lifecycle docs.
+# Large markdown corpus; the "why" lives here but is read directly, not queried.
+_daidlc/
+aidlc-docs/
+
+# Graphify's own output — never index prior runs
+graphify-out/
+
+# Linter and packaging config
+.jshintrc
+.npmignore

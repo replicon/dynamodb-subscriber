@@ -42,3 +42,7 @@ jspm_packages
 .node_repl_history
 
 test*.js
+
+# Python bytecode from the graphify hooks
+__pycache__/
+*.pyc
