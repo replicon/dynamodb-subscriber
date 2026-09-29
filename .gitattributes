@@ -1,0 +1,2 @@
+# Hook wrappers are invoked via `sh` — CRLF would break the shebang on Windows.
+*.sh text eol=lf

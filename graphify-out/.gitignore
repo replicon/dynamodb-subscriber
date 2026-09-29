@@ -1,0 +1,20 @@
+# graphify intermediate and machine-local files — never committed
+cache/
+.graphify_python
+.graphify_root
+.graphify_detect.json
+.graphify_ast.json
+.graphify_semantic.json
+.graphify_cached.json
+.graphify_uncached.txt
+.graphify_chunk_*.json
+.graphify_chunk_plan_*.txt
+.graphify_analysis.json
+.graphify_build.json
+
+# session metrics — machine-local, no CI/dashboard consumes these
+metrics/
+
+# graph.json, manifest.json, GRAPH_REPORT.md, graph.html and the community
+# labels are committed here — this repo has no CI graph publishing, so the
+# graph is rebuilt and committed adhoc via `graphify update .` when needed.

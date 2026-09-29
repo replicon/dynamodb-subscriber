@@ -53,3 +53,86 @@ Before modifying `index.js`, read `aidlc-docs/reverse-engineering/code-quality-a
 ### Audit Trail
 
 `aidlc-docs/audit/audit.md` — chronological log of all D-AIDLC actions and findings.
+
+<!-- graphify-managed-start v2 -->
+## MANDATORY: Query the knowledge graph before reading source files
+
+An **AST knowledge graph** of this codebase lives in `graphify-out/` — 63 nodes, 81
+edges, 9 named communities across `index.js`, `package.json`, and the two mocha suites.
+Query it before reading any source file; the graph surfaces call and import
+relationships you would miss by reading files directly.
+
+This repo indexes the **AST layer only** — there is no semantic layer, so the graph
+answers *where is X / what calls Y / what breaks if I change Z*, not *why was this
+designed this way*. For the "why", read `aidlc-docs/reverse-engineering/`.
+
+**Mandatory workflow:**
+
+1. **Graph first** — run `graphify query` to get relevant nodes with file paths and line numbers
+2. **Targeted read** — use those line numbers to read only the specific lines needed
+3. **Source only** — go to source directly ONLY for runtime/AWS state the graph cannot know
+
+**How to write a good query — semantic, not keyword:**
+
+| ❌ Keyword (avoid) | ✅ Semantic (use this) |
+|---|---|
+| `"ShardIterator"` | `"how a shard is opened and read position is carried between polls"` |
+| `"emit"` | `"how stream records reach the consumer as events"` |
+| `"interval"` | `"how polling is scheduled and stopped"` |
+
+Use `--context` to narrow traversal to a specific relationship type:
+```bash
+graphify query "how records are emitted to consumers" --context "calls" --budget 6000
+```
+
+**Budget:** this graph is ~46 KB, so **start at `--budget 6000`**. If the output shows
+`[!] TRUNCATED`, step up: 6000 → 16000 → 32000. If still truncated at 32000 the query is
+too broad — add `--context` or split it.
+
+**DO NOT read source files when the last query was TRUNCATED.** This is enforced by
+`.claude/hooks/graphify-guard.py` — source reads are blocked until a non-truncated query
+runs. The guard covers `index.js` and `test/`; docs, `_daidlc/` and config are never blocked.
+
+**Other useful commands:**
+
+```bash
+graphify explain "DynamodDBSubscriber"            # node + its neighbors in plain language
+graphify affected "DynamodDBSubscriber"           # what breaks if this changes
+graphify path "DynamodDBSubscriber" "debug"       # shortest path between two nodes
+graphify god-nodes                                # most connected architectural hubs
+```
+
+**Keeping the graph fresh — adhoc, not CI:**
+
+This repo has **no CI graph publishing and no merge workflow**. `graphify-out/graph.json`
+is committed directly and is rebuilt **on demand** when the code has drifted enough to
+matter (a refactor, new module, renamed symbols):
+
+```bash
+graphify update . --no-gitignore            # incremental AST re-extract
+graphify cluster-only . --backend=claude    # re-cluster + re-label communities
+git add graphify-out/ && git commit -m "chore: refresh graphify AST graph"
+```
+
+Use `graphify update . --no-gitignore --force` after a refactor that deletes code, so a
+smaller node count does not get rejected. What is indexed is controlled by `.graphifyignore`.
+
+**Prerequisites:**
+
+- **Python 3.9+** on `PATH` — the hooks are Python scripts.
+- **Windows:** hooks invoke `sh` to run the graphify wrapper. `sh` comes from
+  **Git for Windows** — install with the "Git from the command line and also from
+  3rd-party software" option so `sh` is on `PATH`. Run `where sh` to verify.
+- **graphify CLI** (`pip install graphifyy`) — *optional*. Without it the guard
+  detects the missing binary and disables itself rather than blocking you.
+
+**Turning the guard off:**
+
+```bash
+GRAPHIFY_GUARD_DISABLE=1    # disables graph-first enforcement entirely
+GRAPHIFY_NO_TELEMETRY=1     # disables metrics logging only (guard stays on)
+```
+
+Session metrics are written to `graphify-out/metrics/` (gitignored, never committed)
+and are not consumed by any CI or dashboard in this repo.
+<!-- graphify-managed-end -->
